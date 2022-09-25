@@ -1,5 +1,4 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { initializeTracing } from '@smart-ledger/tracing'
 import { PrismaService } from '../prisma.service';
 //import { accounts } from '@prisma/client';
 import { FindOneRequestDto } from './accounts.dto';
@@ -9,31 +8,23 @@ import { FindOneResponse } from './accounts.pb';
 export class AccountsService {
 	constructor(private prisma: PrismaService) {}
 
-	private tracer = initializeTracing('grpc-accounts-srv');
-
   public async findOne({ name }: FindOneRequestDto): Promise<FindOneResponse> {
-		await this.tracer.startActiveSpan("GET /:account/balances", async (requestSpan) => {
-			try {
-				const account = await this.prisma.accounts.findUnique({
-					where: {
-						name: name,
-					},
-				})
-
-				if (!account) {
-					requestSpan.setAttribute("http.status", HttpStatus.NOT_FOUND);
-					return { data: null, error: ['Account not found'], status: HttpStatus.NOT_FOUND };
-				}
-
-				requestSpan.setAttribute("http.status", HttpStatus.OK);
-				return { data: account, error: null, status: HttpStatus.OK };
-			} catch (e) {
-				requestSpan.setAttribute("http.status", 500);
-				return { data: null, error: e, status: 500 };
-		 	} finally {
-				requestSpan.end();
-			}
+		
+		const account = await this.prisma.accounts.findUnique({
+			where: {
+				name: name,
+			},
+			select: {
+				address: true,
+				name: true,
+			},
 		})
+
+    if (!account) {
+      return { data: null, error: ['Account not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: account, error: null, status: HttpStatus.OK };
   }
 /**
   public async createProduct(payload: CreateProductRequestDto): Promise<CreateProductResponse> {

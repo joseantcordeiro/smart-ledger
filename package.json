@@ -5,6 +5,7 @@
   "scripts": {
     "proto:install": "npm i git+https://github.com/joseantcordeiro/smart-ledger-proto.git",
     "proto:accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-accounts-srv/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:gateway-accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test"
@@ -23,9 +24,12 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@opentelemetry/api": "^1.2.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.32.1",
     "@opentelemetry/exporter-jaeger": "^1.7.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.33.0",
     "@opentelemetry/instrumentation": "^0.33.0",
     "@opentelemetry/resources": "^1.7.0",
+    "@opentelemetry/sdk-node": "^0.33.0",
     "@opentelemetry/sdk-trace-base": "^1.7.0",
     "@opentelemetry/sdk-trace-node": "^1.7.0",
     "@opentelemetry/semantic-conventions": "^1.7.0",

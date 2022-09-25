@@ -4,6 +4,7 @@
   "projects": {
     "cosmos": "libs/cosmos",
     "grpc-accounts-srv": "apps/grpc-accounts-srv",
+    "grpc-api-gateway": "apps/grpc-api-gateway",
     "ledger-api": "apps/ledger-api",
     "tracing": "libs/tracing"
   }
