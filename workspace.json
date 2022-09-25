@@ -2,6 +2,9 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "ledger-api": "apps/ledger-api"
+    "cosmos": "libs/cosmos",
+    "grpc-accounts-srv": "apps/grpc-accounts-srv",
+    "ledger-api": "apps/ledger-api",
+    "tracing": "libs/tracing"
   }
 }
