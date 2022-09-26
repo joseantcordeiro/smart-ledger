@@ -1,7 +1,15 @@
 import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto } from './accounts.dto';
-import { FindAccountResponse, ACCOUNTS_SERVICE_NAME, FindAccountsResponse, FindMetadataResponse } from './accounts.pb';
+import { FindAccountsRequestDto,
+	FindAccountRequestDto,
+	FindMetadataRequestDto,
+	CreateMetadataRequestDto } from './accounts.dto';
+import {
+	FindAccountResponse,
+	ACCOUNTS_SERVICE_NAME,
+	FindAccountsResponse,
+	FindMetadataResponse,
+	CreateMetadataResponse } from './accounts.pb';
 import { AccountsService } from './accounts.service';
 
 @Controller()
@@ -22,6 +30,11 @@ export class AccountsController {
 	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'FindMetadata')
   private findMetadata(payload: FindMetadataRequestDto): Promise<FindMetadataResponse> {
     return this.service.findMetadata(payload);
+  }
+
+	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'CreateMetadata')
+  private createMetadata(payload: CreateMetadataRequestDto): Promise<CreateMetadataResponse> {
+    return this.service.createMetadata(payload);
   }
 
 }

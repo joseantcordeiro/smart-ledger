@@ -52,6 +52,18 @@ export interface FindMetadataResponse {
   data: Metadata[];
 }
 
+export interface CreateMetadataRequest {
+  name: string;
+  key: string;
+  value: string;
+}
+
+export interface CreateMetadataResponse {
+  status: number;
+  error: string[];
+  data: Metadata | undefined;
+}
+
 export const ACCOUNTS_PACKAGE_NAME = "accounts";
 
 export interface AccountsServiceClient {
@@ -60,6 +72,8 @@ export interface AccountsServiceClient {
   findMany(request: FindAccountsRequest): Observable<FindAccountsResponse>;
 
   findMetadata(request: FindMetadataRequest): Observable<FindMetadataResponse>;
+
+  createMetadata(request: CreateMetadataRequest): Observable<CreateMetadataResponse>;
 }
 
 export interface AccountsServiceController {
@@ -74,11 +88,15 @@ export interface AccountsServiceController {
   findMetadata(
     request: FindMetadataRequest,
   ): Promise<FindMetadataResponse> | Observable<FindMetadataResponse> | FindMetadataResponse;
+
+  createMetadata(
+    request: CreateMetadataRequest,
+  ): Promise<CreateMetadataResponse> | Observable<CreateMetadataResponse> | CreateMetadataResponse;
 }
 
 export function AccountsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne", "findMany", "findMetadata"];
+    const grpcMethods: string[] = ["findOne", "findMany", "findMetadata", "createMetadata"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AccountsService", method)(constructor.prototype[method], method, descriptor);

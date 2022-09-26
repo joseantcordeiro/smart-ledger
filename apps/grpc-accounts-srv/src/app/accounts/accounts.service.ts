@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto } from './accounts.dto';
-import { FindAccountsResponse, FindAccountResponse, FindMetadataResponse } from './accounts.pb';
+import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto, CreateMetadataRequestDto } from './accounts.dto';
+import { FindAccountsResponse, FindAccountResponse, FindMetadataResponse, CreateMetadataResponse } from './accounts.pb';
 
 @Injectable()
 export class AccountsService {
@@ -82,6 +82,18 @@ export class AccountsService {
 			//	key: orderBy,
 			//}
 		});
+
+    if (!metadata) {
+      return { data: null, error: ['Metadata not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: metadata, error: null, status: HttpStatus.OK };
+  }
+
+	public async createMetadata({ name, key, value }: CreateMetadataRequestDto): Promise<CreateMetadataResponse> {
+		const metadata = await this.prisma.metadata.create({
+			data: { account: name, key: key, value: value }
+		})
 
     if (!metadata) {
       return { data: null, error: ['Metadata not found'], status: HttpStatus.NOT_FOUND };

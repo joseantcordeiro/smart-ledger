@@ -1,5 +1,8 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { FindAccountsRequest, FindAccountRequest, FindMetadataRequest } from './accounts.pb';
+import { FindAccountsRequest,
+	FindAccountRequest,
+	FindMetadataRequest,
+	CreateMetadataRequest } from './accounts.pb';
 
 export class FindAccountRequestDto implements FindAccountRequest {
   @IsString()
@@ -37,6 +40,20 @@ export class FindMetadataRequestDto implements FindMetadataRequest {
 
 	@IsString()
 	public readonly orderBy: string = 'asc';
+}
+
+export class CreateMetadataRequestDto implements CreateMetadataRequest {
+	@IsString()
+	@IsNotEmpty()
+  public readonly name: string;
+
+	@IsString()
+	@IsNotEmpty()
+  public readonly key: string;
+
+	@IsString()
+	@IsNotEmpty()
+  public readonly value: string;
 }
 
 /**
