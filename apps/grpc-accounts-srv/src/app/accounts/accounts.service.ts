@@ -1,14 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-//import { accounts } from '@prisma/client';
-import { FindOneRequestDto } from './accounts.dto';
-import { FindOneResponse } from './accounts.pb';
+import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto } from './accounts.dto';
+import { FindAccountsResponse, FindAccountResponse, FindMetadataResponse } from './accounts.pb';
 
 @Injectable()
 export class AccountsService {
 	constructor(private prisma: PrismaService) {}
 
-  public async findOne({ name }: FindOneRequestDto): Promise<FindOneResponse> {
+  public async findOne({ name }: FindAccountRequestDto): Promise<FindAccountResponse> {
 		
 		const account = await this.prisma.accounts.findUnique({
 			where: {
@@ -17,6 +16,7 @@ export class AccountsService {
 			select: {
 				address: true,
 				name: true,
+				meta: true
 			},
 		})
 
@@ -26,39 +26,68 @@ export class AccountsService {
 
     return { data: account, error: null, status: HttpStatus.OK };
   }
-/**
-  public async createProduct(payload: CreateProductRequestDto): Promise<CreateProductResponse> {
-    const product: Product = new Product();
 
-    product.name = payload.name;
-    product.sku = payload.sku;
-    product.stock = payload.stock;
-    product.price = payload.price;
+	public async findMany({ searchString, take, skip, orderBy }: FindAccountsRequestDto): Promise<FindAccountsResponse> {
+		const or = searchString ? {
+      OR: [
+        { name: { contains: searchString } },
+        { address: { contains: searchString } },
+      ],
+    } : {};
 
-    await this.repository.save(product);
+		const accounts = await this.prisma.accounts.findMany({
+			where: {
+        active: true,
+        ...or
+      },
+			select: {
+				address: true,
+				name: true,
+				meta: true
+			},
+			take: Number(take) || undefined,
+      skip: Number(skip) || undefined,
+      //orderBy: {
+      //  name: orderBy
+      //}
+		});
 
-    return { id: product.id, error: null, status: HttpStatus.OK };
+    if (!accounts) {
+      return { data: null, error: ['Accounts not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: accounts, error: null, status: HttpStatus.OK };
   }
 
-  public async decreaseStock({ id, orderId }: DecreaseStockRequestDto): Promise<DecreaseStockResponse> {
-    const product: Product = await this.repository.findOne({ select: ['id', 'stock'], where: { id } });
+	public async findMetadata({ name, searchString, take, skip, orderBy }: FindMetadataRequestDto): Promise<FindMetadataResponse> {
+		const or = searchString ? {
+      OR: [
+        { key: { contains: searchString } },
+        { value: { contains: searchString } },
+      ],
+    } : {};
 
-    if (!product) {
-      return { error: ['Product not found'], status: HttpStatus.NOT_FOUND };
-    } else if (product.stock <= 0) {
-      return { error: ['Stock too low'], status: HttpStatus.CONFLICT };
+		const metadata = await this.prisma.metadata.findMany({
+			where: {
+        account: name,
+        ...or
+      },
+			select: {
+				key: true,
+				value: true
+			},
+			take: Number(take) || undefined,
+      skip: Number(skip) || undefined,
+      //orderBy: {
+			//	key: orderBy,
+			//}
+		});
+
+    if (!metadata) {
+      return { data: null, error: ['Metadata not found'], status: HttpStatus.NOT_FOUND };
     }
 
-    const isAlreadyDecreased: number = await this.decreaseLogRepository.count({ where: { orderId } });
+    return { data: metadata, error: null, status: HttpStatus.OK };
+  }
 
-    if (isAlreadyDecreased) {
-      // Idempotence
-      return { error: ['Stock already decreased'], status: HttpStatus.CONFLICT };
-    }
-
-    await this.repository.update(product.id, { stock: product.stock - 1 });
-    await this.decreaseLogRepository.insert({ product, orderId });
-
-    return { error: null, status: HttpStatus.OK };
-  } */
 }

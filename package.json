@@ -6,6 +6,7 @@
     "proto:install": "npm i git+https://github.com/joseantcordeiro/smart-ledger-proto.git",
     "proto:accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-accounts-srv/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gateway-accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:all": "npm run proto:accounts & npm run proto:gateway-accounts",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test"

@@ -4,38 +4,81 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "accounts";
 
-export interface FindOneData {
+export interface Account {
   address: string;
   name: string;
+  meta: Metadata[];
 }
 
-export interface FindOneRequest {
+export interface Metadata {
+  key: string;
+  value: string;
+}
+
+export interface FindAccountRequest {
   name: string;
 }
 
-export interface FindOneResponse {
+export interface FindAccountResponse {
   status: number;
   error: string[];
-  data: FindOneData | undefined;
+  data: Account | undefined;
+}
+
+export interface FindAccountsRequest {
+  searchString: string;
+  take: number;
+  skip: number;
+  orderBy: string;
+}
+
+export interface FindAccountsResponse {
+  status: number;
+  error: string[];
+  data: Account[];
+}
+
+export interface FindMetadataRequest {
+  name: string;
+  searchString: string;
+  take: number;
+  skip: number;
+  orderBy: string;
+}
+
+export interface FindMetadataResponse {
+  status: number;
+  error: string[];
+  data: Metadata[];
 }
 
 export const ACCOUNTS_PACKAGE_NAME = "accounts";
 
 export interface AccountsServiceClient {
-  /** rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse) {} */
+  findOne(request: FindAccountRequest): Observable<FindAccountResponse>;
 
-  findOne(request: FindOneRequest): Observable<FindOneResponse>;
+  findMany(request: FindAccountsRequest): Observable<FindAccountsResponse>;
+
+  findMetadata(request: FindMetadataRequest): Observable<FindMetadataResponse>;
 }
 
 export interface AccountsServiceController {
-  /** rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse) {} */
+  findOne(
+    request: FindAccountRequest,
+  ): Promise<FindAccountResponse> | Observable<FindAccountResponse> | FindAccountResponse;
 
-  findOne(request: FindOneRequest): Promise<FindOneResponse> | Observable<FindOneResponse> | FindOneResponse;
+  findMany(
+    request: FindAccountsRequest,
+  ): Promise<FindAccountsResponse> | Observable<FindAccountsResponse> | FindAccountsResponse;
+
+  findMetadata(
+    request: FindMetadataRequest,
+  ): Promise<FindMetadataResponse> | Observable<FindMetadataResponse> | FindMetadataResponse;
 }
 
 export function AccountsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne"];
+    const grpcMethods: string[] = ["findOne", "findMany", "findMetadata"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AccountsService", method)(constructor.prototype[method], method, descriptor);

@@ -1,11 +1,44 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { FindOneRequest } from './accounts.pb';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { FindAccountsRequest, FindAccountRequest, FindMetadataRequest } from './accounts.pb';
 
-export class FindOneRequestDto implements FindOneRequest {
+export class FindAccountRequestDto implements FindAccountRequest {
   @IsString()
 	@IsNotEmpty()
   public readonly name: string;
 }
+
+export class FindAccountsRequestDto implements FindAccountsRequest {
+  @IsString()
+  public readonly searchString: string = '';
+
+	@IsNumber()
+	public readonly take: number = 10;
+
+	@IsNumber()
+	public readonly skip: number = 0;
+
+	@IsString()
+	public readonly orderBy: string = 'asc';
+}
+
+export class FindMetadataRequestDto implements FindMetadataRequest {
+	@IsString()
+	@IsNotEmpty()
+  public readonly name: string;
+	
+  @IsString()
+  public readonly searchString: string = '';
+
+	@IsNumber()
+	public readonly take: number = 10;
+
+	@IsNumber()
+	public readonly skip: number = 0;
+
+	@IsString()
+	public readonly orderBy: string = 'asc';
+}
+
 /**
 export class CreateProductRequestDto implements CreateProductRequest {
   @IsString()
