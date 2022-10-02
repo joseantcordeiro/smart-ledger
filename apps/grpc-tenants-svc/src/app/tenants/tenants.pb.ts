@@ -1,0 +1,95 @@
+/* eslint-disable */
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
+
+export const protobufPackage = "tenants";
+
+export interface Tenant {
+  id: string;
+  identifier: string;
+  name: string;
+  timezone: number;
+  country: string;
+}
+
+export interface Timezone {
+  value: string;
+  text: string;
+}
+
+export interface FindTenantRequest {
+  id: string;
+}
+
+export interface FindTenantResponse {
+  status: number;
+  error: string[];
+  data: Tenant | undefined;
+}
+
+export interface FindTenantsRequest {
+  searchString: string;
+  take: number;
+  skip: number;
+  orderBy: string;
+}
+
+export interface FindTenantsResponse {
+  status: number;
+  error: string[];
+  data: Tenant[];
+}
+
+export interface CreateTenantRequest {
+  identifier: string;
+  name: string;
+  timezone: number;
+  country: string;
+}
+
+export interface CreateTenantResponse {
+  status: number;
+  error: string[];
+  data: Tenant | undefined;
+}
+
+export const TENANTS_PACKAGE_NAME = "tenants";
+
+export interface TenantsServiceClient {
+  findOne(request: FindTenantRequest): Observable<FindTenantResponse>;
+
+  findMany(request: FindTenantsRequest): Observable<FindTenantsResponse>;
+
+  createTenant(request: CreateTenantRequest): Observable<CreateTenantResponse>;
+}
+
+export interface TenantsServiceController {
+  findOne(
+    request: FindTenantRequest,
+  ): Promise<FindTenantResponse> | Observable<FindTenantResponse> | FindTenantResponse;
+
+  findMany(
+    request: FindTenantsRequest,
+  ): Promise<FindTenantsResponse> | Observable<FindTenantsResponse> | FindTenantsResponse;
+
+  createTenant(
+    request: CreateTenantRequest,
+  ): Promise<CreateTenantResponse> | Observable<CreateTenantResponse> | CreateTenantResponse;
+}
+
+export function TenantsServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = ["findOne", "findMany", "createTenant"];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("TenantsService", method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("TenantsService", method)(constructor.prototype[method], method, descriptor);
+    }
+  };
+}
+
+export const TENANTS_SERVICE_NAME = "TenantsService";
