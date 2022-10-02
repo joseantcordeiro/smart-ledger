@@ -1,0 +1,66 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["tracing", "multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+	schemas  = ["tenants", "accounts"]
+}
+
+model tenants {
+	id 				 	 String @id @default(cuid())
+	identifier 	 String @db.VarChar(100)
+	name			 	 String @db.VarChar(100)
+	createdAt 	 DateTime @default(now())
+  updatedAt 	 DateTime @updatedAt
+	timezone_id  Int
+	timezone		 timezones @relation(fields: [timezone_id], references: [id])
+	country_code String @db.VarChar(2)
+	country			 countries @relation(fields: [country_code], references: [country_code])
+
+	@@schema("tenants")
+}
+
+model timezones {
+	id 			Int 		@id @default(autoincrement()) @db.SmallInt
+	value		String  @db.VarChar(100)
+	abbr		String  @db.VarChar(10)
+	offset	Int			@db.SmallInt
+	isdst		Boolean @db.Boolean
+	text		String  @db.VarChar(100)
+	utc			String[]
+	tenants	tenants[]
+
+	@@schema("tenants")
+}
+
+model countries {
+	country_code String @unique @db.VarChar(2)
+	name				 String @db.VarChar(100)
+	comments		 String @db.VarChar(150)
+	tenants			 tenants[]
+
+	@@schema("tenants")
+}
+
+model accounts {
+  address  String  @unique @db.VarChar
+	name 		 String  @unique @db.VarChar
+	active   Boolean @default(false)
+	meta		 metadata[]
+
+	@@schema("accounts")
+}
+
+model metadata {
+	account String 	  @db.VarChar
+	key 		String 	  @db.VarChar
+	value 	String 	  @db.VarChar
+	acc		  accounts? @relation(fields: [account], references: [name], onDelete: Cascade)
+
+	@@unique([account, key])
+
+	@@schema("accounts")
+}
