@@ -3,9 +3,9 @@
   "version": 2,
   "projects": {
     "cosmos": "libs/cosmos",
-    "grpc-accounts-srv": "apps/grpc-accounts-srv",
+    "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
-    "grpc-tenants-srv": "apps/grpc-tenants-srv",
+    "grpc-tenants-svc": "apps/grpc-tenants-svc",
     "ledger-api": "apps/ledger-api",
     "tracing": "libs/tracing"
   }
