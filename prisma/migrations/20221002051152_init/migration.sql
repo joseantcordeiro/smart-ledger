@@ -22,7 +22,7 @@ CREATE TABLE "tenants"."timezones" (
     "id" SMALLSERIAL NOT NULL,
     "value" VARCHAR(100) NOT NULL,
     "abbr" VARCHAR(10) NOT NULL,
-    "offset" SMALLINT NOT NULL,
+    "offset" FLOAT4 NOT NULL,
     "isdst" BOOLEAN NOT NULL,
     "text" VARCHAR(100) NOT NULL,
     "utc" TEXT[],

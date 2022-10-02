@@ -27,7 +27,7 @@ model timezones {
 	id 			Int 		@id @default(autoincrement()) @db.SmallInt
 	value		String  @db.VarChar(100)
 	abbr		String  @db.VarChar(10)
-	offset	Int			@db.SmallInt
+	offset	Float		
 	isdst		Boolean @db.Boolean
 	text		String  @db.VarChar(100)
 	utc			String[]
