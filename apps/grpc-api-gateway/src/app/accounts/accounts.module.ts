@@ -10,7 +10,7 @@ import { AccountsController } from './accounts.controller';
         name: ACCOUNTS_SERVICE_NAME,
         transport: Transport.GRPC,
         options: {
-          url: '0.0.0.0:50052',
+          url: '0.0.0.0:50053',
           package: ACCOUNTS_PACKAGE_NAME,
           protoPath: 'node_modules/smart-ledger-proto/proto/accounts.proto',
         },

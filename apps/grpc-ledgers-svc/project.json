@@ -1,0 +1,59 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/grpc-ledgers-svc/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/grpc-ledgers-svc",
+        "main": "apps/grpc-ledgers-svc/src/main.ts",
+        "tsConfig": "apps/grpc-ledgers-svc/tsconfig.app.json",
+        "assets": ["apps/grpc-ledgers-svc/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/grpc-ledgers-svc/src/environments/environment.ts",
+              "with": "apps/grpc-ledgers-svc/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/js:node",
+      "options": {
+        "buildTarget": "grpc-ledgers-svc:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "grpc-ledgers-svc:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/grpc-ledgers-svc/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/grpc-ledgers-svc"],
+      "options": {
+        "jestConfig": "apps/grpc-ledgers-svc/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

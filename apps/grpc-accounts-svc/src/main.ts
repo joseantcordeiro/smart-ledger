@@ -12,7 +12,7 @@ async function bootstrap() {
   const app: INestMicroservice = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.GRPC,
     options: {
-      url: '0.0.0.0:50052',
+      url: '0.0.0.0:50053',
       package: protobufPackage,
       protoPath: join('node_modules/smart-ledger-proto/proto/accounts.proto'),
     },

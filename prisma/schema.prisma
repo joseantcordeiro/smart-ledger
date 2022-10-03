@@ -6,11 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-	schemas  = ["tenants", "accounts"]
+	schemas  = ["tenants", "ledgers", "accounts"]
 }
 
 model tenants {
-	id 				 	 String @id @default(cuid())
+	id 				 	 String @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String @db.VarChar(100)
 	name			 	 String @db.VarChar(100)
 	createdAt 	 DateTime @default(now())
@@ -19,6 +19,7 @@ model tenants {
 	country			 countries @relation(fields: [country_code], references: [code])
 	timezone_id  Int @db.SmallInt
 	timezone		 timezones @relation(fields: [timezone_id], references: [id])
+	ledgers	  	 ledgers[]
 
 	@@schema("tenants")
 }
@@ -36,6 +37,27 @@ model timezones {
 	@@schema("tenants")
 }
 
+model ledgers {
+	id				String @id @default(cuid()) @db.VarChar(50)
+	name 			String @db.VarChar(100)
+	volumeIn	Float
+	volumeOut	Float
+	tenantId	String @db.VarChar(50)
+	tenant		tenants @relation(fields: [tenantId], references: [id])
+
+	@@schema("ledgers")
+}
+
+model configs {
+	ledger	String @db.VarChar(50)
+	key 		String @db.VarChar(50)
+	value 	String @db.VarChar(100)
+
+	@@unique([ledger, key])
+
+	@@schema("ledgers")
+}
+
 model countries {
 	code 			String @unique @db.VarChar(2)
 	name			String @db.VarChar(100)
@@ -48,6 +70,8 @@ model countries {
 model accounts {
   address  String  @unique @db.VarChar
 	name 		 String  @unique @db.VarChar
+	volumeIn	Float
+	volumeOut	Float
 	active   Boolean @default(false)
 	meta		 metadata[]
 

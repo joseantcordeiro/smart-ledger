@@ -5,6 +5,7 @@
     "cosmos": "libs/cosmos",
     "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
+    "grpc-ledgers-svc": "apps/grpc-ledgers-svc",
     "grpc-tenants-svc": "apps/grpc-tenants-svc",
     "ledger-api": "apps/ledger-api",
     "tracing": "libs/tracing"

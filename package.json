@@ -5,10 +5,12 @@
   "scripts": {
     "proto:install": "npm i git+https://github.com/joseantcordeiro/smart-ledger-proto.git",
     "proto:tenants": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-tenants-svc/src/app/tenants/ node_modules/smart-ledger-proto/proto/tenants.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+		"proto:ledgers": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-ledgers-svc/src/app/ledgers/ node_modules/smart-ledger-proto/proto/ledgers.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-accounts-svc/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gateway-tenants": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/tenants/ node_modules/smart-ledger-proto/proto/tenants.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+		"proto:gateway-ledgers": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/ledgers/ node_modules/smart-ledger-proto/proto/ledgers.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gateway-accounts": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/accounts/ node_modules/smart-ledger-proto/proto/accounts.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:all": "npm run proto:accounts & npm run proto:gateway-accounts & npm run proto:tenants & npm run proto:gateway-tenants",
+    "proto:all": "npm run proto:accounts & npm run proto:gateway-accounts & npm run proto:tenants & npm run proto:gateway-tenants & npm run proto:ledgers & npm run proto:gateway-ledgers",
     "timezones": "ts-node prisma/timezones.ts",
     "start": "nx serve",
     "build": "nx build",
