@@ -15,10 +15,10 @@ model tenants {
 	name			 	 String @db.VarChar(100)
 	createdAt 	 DateTime @default(now())
   updatedAt 	 DateTime @updatedAt
-	timezone_id  Int
-	timezone		 timezones @relation(fields: [timezone_id], references: [id])
 	country_code String @db.VarChar(2)
-	country			 countries @relation(fields: [country_code], references: [country_code])
+	country			 countries @relation(fields: [country_code], references: [code])
+	timezone_id  Int @db.SmallInt
+	timezone		 timezones @relation(fields: [timezone_id], references: [id])
 
 	@@schema("tenants")
 }
@@ -37,10 +37,10 @@ model timezones {
 }
 
 model countries {
-	country_code String @unique @db.VarChar(2)
-	name				 String @db.VarChar(100)
-	comments		 String @db.VarChar(150)
-	tenants			 tenants[]
+	code 			String @unique @db.VarChar(2)
+	name			String @db.VarChar(100)
+	comments	String @db.VarChar(150)
+	tenants		tenants[]
 
 	@@schema("tenants")
 }
