@@ -15,7 +15,7 @@ export class TenantsController {
   }
 
 	@GrpcMethod(TENANTS_SERVICE_NAME, 'CreateTenant')
-  private createMetadata(payload: CreateTenantRequestDto): Promise<CreateTenantResponse> {
+  private createTenant(payload: CreateTenantRequestDto): Promise<CreateTenantResponse> {
     return this.service.createTenant(payload);
   }
 

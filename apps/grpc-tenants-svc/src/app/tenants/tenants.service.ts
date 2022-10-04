@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "@ledger/prisma";
 import { FindTenantRequestDto, CreateTenantRequestDto } from './tenants.dto';
 import { FindTenantResponse, CreateTenantResponse } from './tenants.pb';
 

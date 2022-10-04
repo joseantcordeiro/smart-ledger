@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '@ledger/prisma';
 import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto, CreateMetadataRequestDto } from './accounts.dto';
 import { FindAccountsResponse, FindAccountResponse, FindMetadataResponse, CreateMetadataResponse } from './accounts.pb';
 

@@ -38,11 +38,12 @@ model timezones {
 }
 
 model ledgers {
-	id				String @id @default(cuid()) @db.VarChar(50)
-	name 			String @db.VarChar(100)
+	id				String  @id @default(cuid()) @db.VarChar(50)
+	name 			String  @db.VarChar(100)
 	volumeIn	Float
 	volumeOut	Float
-	tenantId	String @db.VarChar(50)
+	tenantId	String  @db.VarChar(50)
+	accounts  accounts[]
 	tenant		tenants @relation(fields: [tenantId], references: [id])
 
 	@@schema("ledgers")
@@ -68,12 +69,14 @@ model countries {
 }
 
 model accounts {
-  address  String  @unique @db.VarChar
-	name 		 String  @unique @db.VarChar
+  address   String  @unique @db.VarChar
+	name 		  String  @unique @db.VarChar
 	volumeIn	Float
 	volumeOut	Float
-	active   Boolean @default(false)
-	meta		 metadata[]
+	active    Boolean @default(false)
+	meta		  metadata[]
+	ledgerId  String  @db.VarChar(50)
+	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
 
 	@@schema("accounts")
 }
