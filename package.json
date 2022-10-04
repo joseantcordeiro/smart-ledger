@@ -45,9 +45,13 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
     "rxjs": "^7.0.0",
     "smart-ledger-proto": "github:joseantcordeiro/smart-ledger-proto",
-    "tslib": "^2.3.0"
+    "ts-interface-checker": "^1.0.2",
+    "tslib": "^2.3.0",
+    "verror": "^1.10.1"
   },
   "devDependencies": {
     "@nestjs/schematics": "^9.0.0",
@@ -60,9 +64,12 @@
     "@nrwl/node": "14.7.13",
     "@nrwl/nx-cloud": "latest",
     "@nrwl/workspace": "14.7.13",
+    "@types/debug": "^4.1.7",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
     "@types/passport-jwt": "^3.0.6",
+    "@types/request-promise-native": "^1.0.18",
+    "@types/verror": "^1.10.6",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "~8.15.0",

@@ -99,7 +99,7 @@ export class AccountsService {
       return { data: null, error: ['Metadata not found'], status: HttpStatus.NOT_FOUND };
     }
 
-    return { data: metadata, error: null, status: HttpStatus.OK };
+    return { data: metadata, error: null, status: HttpStatus.CREATED };
   }
 
 }

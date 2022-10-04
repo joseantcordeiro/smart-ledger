@@ -9,6 +9,7 @@
     "grpc-tenants-svc": "apps/grpc-tenants-svc",
     "ledger-api": "apps/ledger-api",
     "prisma": "libs/prisma",
-    "tracing": "libs/tracing"
+    "tracing": "libs/tracing",
+    "vault": "libs/vault"
   }
 }

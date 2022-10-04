@@ -71,7 +71,7 @@ export class TenantsService {
 			},
 		})
 
-    return { data: data, error: null, status: HttpStatus.OK };
+    return { data: data, error: null, status: HttpStatus.CREATED };
   }
 
 }

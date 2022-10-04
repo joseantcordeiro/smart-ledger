@@ -54,7 +54,7 @@ export class LedgersService {
       return { data: null, error: ['Tenant not created'], status: HttpStatus.NOT_FOUND };
     }
 
-    return { data: ledger, error: null, status: HttpStatus.OK };
+    return { data: ledger, error: null, status: HttpStatus.CREATED };
   }
 
 	public async getConfiguration(request: GetConfigurationRequestDto): Promise<GetConfigurationResponse> {
@@ -109,7 +109,7 @@ export class LedgersService {
       return { data: null, error: ['Configuration not created'], status: HttpStatus.NOT_FOUND };
     }
 
-    return { data: config, error: null, status: HttpStatus.OK };
+    return { data: config, error: null, status: HttpStatus.CREATED };
   }
 
 }
