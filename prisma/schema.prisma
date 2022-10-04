@@ -13,13 +13,13 @@ model tenants {
 	id 				 	 String @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String @db.VarChar(100)
 	name			 	 String @db.VarChar(100)
-	createdAt 	 DateTime @default(now())
-  updatedAt 	 DateTime @updatedAt
 	country_code String @db.VarChar(2)
 	country			 countries @relation(fields: [country_code], references: [code])
 	timezone_id  Int @db.SmallInt
 	timezone		 timezones @relation(fields: [timezone_id], references: [id])
 	ledgers	  	 ledgers[]
+	createdAt 	 DateTime @default(now())
+  updatedAt 	 DateTime @updatedAt
 
 	@@schema("tenants")
 }
@@ -38,13 +38,15 @@ model timezones {
 }
 
 model ledgers {
-	id				String  @id @default(cuid()) @db.VarChar(50)
-	name 			String  @db.VarChar(100)
-	volumeIn	Float
-	volumeOut	Float
-	tenantId	String  @db.VarChar(50)
+	id				String   @id @default(cuid()) @db.VarChar(50)
+	name 			String   @db.VarChar(100)
+	volumeIn	Float		 @default(0.00)
+	volumeOut	Float		 @default(0.00)
+	tenantId	String   @db.VarChar(50)
 	accounts  accounts[]
-	tenant		tenants @relation(fields: [tenantId], references: [id])
+	tenant		tenants  @relation(fields: [tenantId], references: [id])
+	createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
 	@@schema("ledgers")
 }
@@ -71,12 +73,14 @@ model countries {
 model accounts {
   address   String  @unique @db.VarChar
 	name 		  String  @unique @db.VarChar
-	volumeIn	Float
-	volumeOut	Float
+	volumeIn	Float		@default(0.00)
+	volumeOut	Float		@default(0.00)
 	active    Boolean @default(false)
 	meta		  metadata[]
 	ledgerId  String  @db.VarChar(50)
 	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
+	createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
 	@@schema("accounts")
 }

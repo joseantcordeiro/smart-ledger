@@ -1,5 +1,11 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { FindLedgerRequest, CreateLedgerRequest } from './tenants.pb';
+import {
+	FindLedgerRequest,
+	CreateLedgerRequest,
+	GetConfigurationRequest,
+	GetConfigurationsRequest,
+	CreateConfigurationRequest
+} from './ledgers.pb';
 
 export class FindLedgerRequestDto implements FindLedgerRequest {
   @IsString()
@@ -10,12 +16,43 @@ export class FindLedgerRequestDto implements FindLedgerRequest {
 export class CreateLedgerRequestDto implements CreateLedgerRequest {
 	@IsString()
 	@IsNotEmpty()
+  public readonly tenantId: string;
+
+	@IsString()
+	@IsNotEmpty()
   public readonly name: string;
 
-	@IsNumber()
-	public readonly volumeIn: number = 0.00;
+}
 
-	@IsNumber()
-	public readonly volumeOut: number = 0.00;
+export class GetConfigurationRequestDto implements GetConfigurationRequest {
+	@IsString()
+	@IsNotEmpty()
+	public readonly id: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public readonly key: string;
+
+}
+
+export class GetConfigurationsRequestDto implements GetConfigurationsRequest {
+	@IsString()
+	@IsNotEmpty()
+	public readonly id: string;
+
+}
+
+export class CreateConfigurationRequestDto implements CreateConfigurationRequest {
+  @IsString()
+	@IsNotEmpty()
+	public readonly id: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public readonly key: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public readonly value: string;
 
 }

@@ -11,7 +11,7 @@ export interface Ledger {
   volumeOut: number;
 }
 
-export interface Config {
+export interface Configuration {
   key: string;
   value: string;
 }
@@ -27,6 +27,7 @@ export interface FindLedgerResponse {
 }
 
 export interface CreateLedgerRequest {
+  tenantId: string;
   name: string;
 }
 
@@ -36,12 +37,51 @@ export interface CreateLedgerResponse {
   data: Ledger | undefined;
 }
 
+export interface GetConfigurationRequest {
+  id: string;
+  key: string;
+}
+
+export interface GetConfigurationsRequest {
+  id: string;
+}
+
+export interface CreateConfigurationRequest {
+  id: string;
+  key: string;
+  value: string;
+}
+
+export interface GetConfigurationResponse {
+  status: number;
+  error: string[];
+  data: Configuration | undefined;
+}
+
+export interface GetConfigurationsResponse {
+  status: number;
+  error: string[];
+  data: Configuration[];
+}
+
+export interface CreateConfigurationResponse {
+  status: number;
+  error: string[];
+  data: Configuration | undefined;
+}
+
 export const LEDGERS_PACKAGE_NAME = "ledgers";
 
 export interface LedgersServiceClient {
   findOne(request: FindLedgerRequest): Observable<FindLedgerResponse>;
 
-  createTenant(request: CreateLedgerRequest): Observable<CreateLedgerResponse>;
+  createLedger(request: CreateLedgerRequest): Observable<CreateLedgerResponse>;
+
+  getConfiguration(request: GetConfigurationRequest): Observable<GetConfigurationResponse>;
+
+  getConfigurations(request: GetConfigurationsRequest): Observable<GetConfigurationsResponse>;
+
+  createConfiguration(request: CreateConfigurationRequest): Observable<CreateConfigurationResponse>;
 }
 
 export interface LedgersServiceController {
@@ -49,14 +89,32 @@ export interface LedgersServiceController {
     request: FindLedgerRequest,
   ): Promise<FindLedgerResponse> | Observable<FindLedgerResponse> | FindLedgerResponse;
 
-  createTenant(
+  createLedger(
     request: CreateLedgerRequest,
   ): Promise<CreateLedgerResponse> | Observable<CreateLedgerResponse> | CreateLedgerResponse;
+
+  getConfiguration(
+    request: GetConfigurationRequest,
+  ): Promise<GetConfigurationResponse> | Observable<GetConfigurationResponse> | GetConfigurationResponse;
+
+  getConfigurations(
+    request: GetConfigurationsRequest,
+  ): Promise<GetConfigurationsResponse> | Observable<GetConfigurationsResponse> | GetConfigurationsResponse;
+
+  createConfiguration(
+    request: CreateConfigurationRequest,
+  ): Promise<CreateConfigurationResponse> | Observable<CreateConfigurationResponse> | CreateConfigurationResponse;
 }
 
 export function LedgersServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne", "createTenant"];
+    const grpcMethods: string[] = [
+      "findOne",
+      "createLedger",
+      "getConfiguration",
+      "getConfigurations",
+      "createConfiguration",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("LedgersService", method)(constructor.prototype[method], method, descriptor);

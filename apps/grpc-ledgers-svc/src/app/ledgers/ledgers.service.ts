@@ -1,7 +1,19 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
-import { FindLedgerRequestDto, CreateLedgerRequestDto } from './ledgers.dto';
-import { FindLedgerResponse, CreateLedgerResponse } from './ledgers.pb';
+import {
+	FindLedgerRequestDto,
+	CreateLedgerRequestDto,
+	GetConfigurationRequestDto,
+	GetConfigurationsRequestDto,
+	CreateConfigurationRequestDto
+} from './ledgers.dto';
+import {
+	FindLedgerResponse,
+	CreateLedgerResponse,
+	GetConfigurationResponse,
+	GetConfigurationsResponse,
+	CreateConfigurationResponse
+} from './ledgers.pb';
 
 @Injectable()
 export class LedgersService {
@@ -28,39 +40,76 @@ export class LedgersService {
     return { data: ledger, error: null, status: HttpStatus.OK };
   }
 
-	public async createLedger({ name, identifier, timezone, country }: CreateLedgerRequestDto): Promise<CreateLedgerResponse> {
-		const tenant = await this.prisma.ledgers.create({
-			data: { name: name, identifier: identifier, timezone_id: timezone, country_code: country }
+	public async createLedger({ tenantId, name }: CreateLedgerRequestDto): Promise<CreateLedgerResponse> {
+		const ledger = await this.prisma.ledgers.create({
+			data: {
+				name: name,
+				tenant: {
+					connect: { id: tenantId },
+				},
+			}
 		})
 
-    if (!tenant) {
+    if (!ledger) {
       return { data: null, error: ['Tenant not created'], status: HttpStatus.NOT_FOUND };
     }
 
-		const data = await this.prisma.ledgers.findUnique({
+    return { data: ledger, error: null, status: HttpStatus.OK };
+  }
+
+	public async getConfiguration(request: GetConfigurationRequestDto): Promise<GetConfigurationResponse> {
+		
+		const config = await this.prisma.configs.findUnique({
 			where: {
-				id: tenant.id,
+				ledger_key: {
+					ledger: request.id,
+					key: request.key,
+				},
 			},
 			select: {
-				id: true,
-				name: true,
-				identifier: true,
-				country: {
-					select: {
-						code: true,
-						name: true,
-					},
-				},
-				timezone: {
-					select: {
-						value: true,
-						text: true,
-					},
-				},
+				ledger: true,
+				key: true,
+				value: true,
 			},
 		})
 
-    return { data: data, error: null, status: HttpStatus.OK };
+    if (!config) {
+      return { data: null, error: ['Configuration not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: config, error: null, status: HttpStatus.OK };
+  }
+
+	public async getConfigurations(request: GetConfigurationsRequestDto): Promise<GetConfigurationsResponse> {
+		
+		const config = await this.prisma.configs.findMany({
+			where: {
+				ledger: request.id,
+			},
+			select: {
+				ledger: true,
+				key: true,
+				value: true,
+			},
+		})
+
+    if (!config) {
+      return { data: null, error: ['Configurations not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: config, error: null, status: HttpStatus.OK };
+  }
+
+	public async createConfiguration(request: CreateConfigurationRequestDto): Promise<CreateConfigurationResponse> {
+		const config = await this.prisma.configs.create({
+			data: { ledger: request.id, key: request.key, value: request.value }
+		})
+
+    if (!config) {
+      return { data: null, error: ['Configuration not created'], status: HttpStatus.NOT_FOUND };
+    }
+
+    return { data: config, error: null, status: HttpStatus.OK };
   }
 
 }
