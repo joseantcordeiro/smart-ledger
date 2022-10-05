@@ -1,27 +1,26 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["tracing", "multiSchema"]
+  previewFeatures = ["tracing"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-	schemas  = ["tenants", "ledgers", "accounts"]
+
 }
 
 model tenants {
-	id 				 	 String @id @default(cuid()) @db.VarChar(50)
-	identifier 	 String @db.VarChar(100)
-	name			 	 String @db.VarChar(100)
-	country_code String @db.VarChar(2)
+	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
+	identifier 	 String 	 @db.VarChar(100)
+	name			 	 String 	 @db.VarChar(100)
+	country_code String 	 @db.VarChar(2)
 	country			 countries @relation(fields: [country_code], references: [code])
-	timezone_id  Int @db.SmallInt
-	timezone		 timezones @relation(fields: [timezone_id], references: [id])
+	timezoneId   Int 			 @db.SmallInt
+	timezone		 timezones @relation(fields: [timezoneId], references: [id])
 	ledgers	  	 ledgers[]
-	createdAt 	 DateTime @default(now())
-  updatedAt 	 DateTime @updatedAt
+	createdAt 	 DateTime  @default(now())
+  updatedAt 	 DateTime  @updatedAt
 
-	@@schema("tenants")
 }
 
 model timezones {
@@ -34,31 +33,28 @@ model timezones {
 	utc			String[]
 	tenants	tenants[]
 
-	@@schema("tenants")
 }
 
 model ledgers {
 	id				String   @id @default(cuid()) @db.VarChar(50)
 	name 			String   @db.VarChar(100)
-	volumeIn	Float		 @default(0.00)
-	volumeOut	Float		 @default(0.00)
 	tenantId	String   @db.VarChar(50)
-	accounts  accounts[]
 	tenant		tenants  @relation(fields: [tenantId], references: [id])
+	accounts  accounts[]
+	assets		assets[]
 	createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-	@@schema("ledgers")
 }
 
-model configs {
-	ledger	String @db.VarChar(50)
-	key 		String @db.VarChar(50)
-	value 	String @db.VarChar(100)
+model configuration {
+	targetId 	String 	  @db.VarChar
+	key 		 	String 	  @db.VarChar
+	value 	 	String 	  @db.VarChar
+	timestamp DateTime 	@default(now())
 
-	@@unique([ledger, key])
+	@@unique([targetId, key])
 
-	@@schema("ledgers")
 }
 
 model countries {
@@ -67,31 +63,48 @@ model countries {
 	comments	String @db.VarChar(150)
 	tenants		tenants[]
 
-	@@schema("tenants")
 }
 
 model accounts {
   address   String  @unique @db.VarChar
-	name 		  String  @unique @db.VarChar
-	volumeIn	Float		@default(0.00)
-	volumeOut	Float		@default(0.00)
+	name 		  String  @db.VarChar
 	active    Boolean @default(false)
-	meta		  metadata[]
 	ledgerId  String  @db.VarChar(50)
 	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
-	createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+	timestamp DateTime @default(now())
 
-	@@schema("accounts")
+	@@unique([name, ledgerId])
+
 }
 
 model metadata {
-	account String 	  @db.VarChar
-	key 		String 	  @db.VarChar
-	value 	String 	  @db.VarChar
-	acc		  accounts? @relation(fields: [account], references: [name], onDelete: Cascade)
+	targetId 	String 	  @db.VarChar
+	key 		 	String 	  @db.VarChar
+	value 	 	String 	  @db.VarChar
+	timestamp DateTime 	@default(now())
 
-	@@unique([account, key])
+	@@unique([targetId, key])
 
-	@@schema("accounts")
+}
+
+model assets {
+	contract  String 	 @unique @db.VarChar
+	name 		  String 	 @db.VarChar
+	symbol 	  String 	 @db.VarChar
+	ownerAcc  String 	 @db.VarChar
+	ledgerId  String   @db.VarChar(50)
+	ledger	  ledgers  @relation(fields: [ledgerId], references: [id])
+	timestamp DateTime @default(now())
+
+	@@unique([ledgerId, symbol])
+
+}
+
+model volumes {
+	account String @db.VarChar(50)
+	asset	 	String @db.VarChar(10)
+	in	 		Float  @default(0.00)
+	out			Float	 @default(0.00)
+
+	@@unique([account, asset])
 }

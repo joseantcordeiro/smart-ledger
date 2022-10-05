@@ -41,7 +41,7 @@ export class TenantsService {
 
 	public async createTenant({ name, identifier, timezone, country }: CreateTenantRequestDto): Promise<CreateTenantResponse> {
 		const tenant = await this.prisma.tenants.create({
-			data: { name: name, identifier: identifier, timezone_id: timezone, country_code: country }
+			data: { name: name, identifier: identifier, timezoneId: timezone, country_code: country }
 		})
 
     if (!tenant) {
