@@ -9,6 +9,13 @@ datasource db {
 
 }
 
+enum Status {
+  ACTIVE
+  SUSPEND
+	BANNED
+	DELETED
+}
+
 model tenants {
 	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String 	 @db.VarChar(100)
@@ -68,7 +75,7 @@ model countries {
 model accounts {
   address   String  @unique @db.VarChar
 	name 		  String  @db.VarChar
-	active    Boolean @default(false)
+	status    Status  @default(ACTIVE)
 	ledgerId  String  @db.VarChar(50)
 	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
 	timestamp DateTime @default(now())

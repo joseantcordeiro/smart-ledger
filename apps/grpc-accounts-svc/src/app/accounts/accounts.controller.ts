@@ -27,14 +27,4 @@ export class AccountsController {
     return this.service.findMany(payload);
   }
 
-	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'FindMetadata')
-  private findMetadata(payload: FindMetadataRequestDto): Promise<FindMetadataResponse> {
-    return this.service.findMetadata(payload);
-  }
-
-	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'CreateMetadata')
-  private createMetadata(payload: CreateMetadataRequestDto): Promise<CreateMetadataResponse> {
-    return this.service.createMetadata(payload);
-  }
-
 }

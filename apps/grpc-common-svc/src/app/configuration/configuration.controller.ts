@@ -1,6 +1,9 @@
 import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { ConfigurationService } from './configuration.service';
+import {
+	COMMON_SERVICE_NAME,
+} from '../common.pb';
 
 @Controller()
 export class ConfigurationController {
