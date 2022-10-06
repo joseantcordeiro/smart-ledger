@@ -36,7 +36,7 @@ export class TenantsService {
       return { data: null, error: ['Tenant not found'], status: HttpStatus.NOT_FOUND };
     }
 
-    return { data: tenant, error: null, status: HttpStatus.OK };
+    return { data: tenant, error: null, status: HttpStatus.CREATED };
   }
 
 	public async createTenant({ name, identifier, timezone, country }: CreateTenantRequestDto): Promise<CreateTenantResponse> {
@@ -71,7 +71,24 @@ export class TenantsService {
 			},
 		})
 
+		const count = await this.tenantDefaultConfiguration(data.id);
+		if (count < 1) {
+      return { data: data, error: ['Default tenant configuration not created'], status: HttpStatus.CREATED };
+    }
+
     return { data: data, error: null, status: HttpStatus.CREATED };
+  }
+
+	public async tenantDefaultConfiguration(targetId: string): Promise<number> {
+		const count = await this.prisma.configuration.createMany({
+			data: [
+				{ targetId: targetId, key: 'LANGUAGUE', value: 'EN' },
+				{ targetId: targetId, key: 'DEFAULT_FEE', value: '0.05' },
+			],
+			skipDuplicates: true,
+		})
+
+    return count.count;
   }
 
 }

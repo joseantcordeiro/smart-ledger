@@ -19,19 +19,23 @@ export class AccountsController implements OnModuleInit {
     this.svc = this.client.getService<AccountsServiceClient>(ACCOUNTS_SERVICE_NAME);
   }
 
-  @Get(':name')
-  private async findOne(@Param('name') name: string): Promise<Observable<FindAccountResponse>> {
-    return this.svc.findOne({ name });
+  @Get(':name/:ledgerId')
+  private async findOne(
+		@Param('name') name: string,
+		@Param('ledgerId') ledgerId: string
+		): Promise<Observable<FindAccountResponse>> {
+    return this.svc.findOne({ name, ledgerId });
   }
 
-	@Get()
+	@Get(':ledgerId')
   private async findMany(
+		@Param('ledgerId') ledgerId: string,
     @Query('take') take?: number,
     @Query('skip') skip?: number,
     @Query('searchString') searchString?: string,
     @Query('orderBy') orderBy?: 'asc' | 'desc',
   ): Promise<Observable<FindAccountsResponse>> {
-		return this.svc.findMany({ searchString, take, skip, orderBy });
+		return this.svc.findMany({ searchString, take, skip, orderBy, ledgerId });
   }
 	
 }

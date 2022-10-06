@@ -46,7 +46,24 @@ export class LedgersService {
       return { data: null, error: ['Ledger not created'], status: HttpStatus.NOT_FOUND };
     }
 
+		const count = await this.ledgerDefaultConfiguration(ledger.id);
+		if (count < 1) {
+      return { data: ledger, error: ['Default tenant configuration not created'], status: HttpStatus.CREATED };
+    }
+
     return { data: ledger, error: null, status: HttpStatus.CREATED };
+  }
+
+	public async ledgerDefaultConfiguration(targetId: string): Promise<number> {
+		const count = await this.prisma.configuration.createMany({
+			data: [
+				{ targetId: targetId, key: 'LANGUAGUE', value: 'EN' },
+				{ targetId: targetId, key: 'DEFAULT_FEE', value: '0.05' },
+			],
+			skipDuplicates: true,
+		})
+
+    return count.count;
   }
 
 

@@ -10,7 +10,7 @@ import {
 } from '../common.pb';
 
 @Controller('configuration')
-export class MetadataController implements OnModuleInit {
+export class ConfigurationController implements OnModuleInit {
   private svc: CommonServiceClient;
 
   @Inject(COMMON_SERVICE_NAME)
