@@ -1,17 +1,20 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@ledger/prisma';
-import { FindAccountsRequestDto, FindAccountRequestDto, FindMetadataRequestDto, CreateMetadataRequestDto } from './accounts.dto';
-import { FindAccountsResponse, FindAccountResponse, FindMetadataResponse, CreateMetadataResponse } from './accounts.pb';
+import { FindAccountsRequestDto, FindAccountRequestDto } from './accounts.dto';
+import { FindAccountsResponse, FindAccountResponse } from './accounts.pb';
 
 @Injectable()
 export class AccountsService {
 	constructor(private prisma: PrismaService) {}
 
-  public async findOne({ name }: FindAccountRequestDto): Promise<FindAccountResponse> {
+  public async findOne({ name, ledgerId }: FindAccountRequestDto): Promise<FindAccountResponse> {
 		
 		const account = await this.prisma.accounts.findUnique({
 			where: {
-				name: name,
+				name_ledgerId: {
+					name: name,
+					ledgerId: ledgerId
+				}
 			},
 			select: {
 				address: true,
@@ -27,7 +30,7 @@ export class AccountsService {
     return { data: account, error: null, status: HttpStatus.OK };
   }
 
-	public async findMany({ searchString, take, skip, orderBy }: FindAccountsRequestDto): Promise<FindAccountsResponse> {
+	public async findMany({ searchString, take, skip, orderBy, ledgerId }: FindAccountsRequestDto): Promise<FindAccountsResponse> {
 		const or = searchString ? {
       OR: [
         { name: { contains: searchString } },
@@ -38,6 +41,7 @@ export class AccountsService {
 		const accounts = await this.prisma.accounts.findMany({
 			where: {
         status: 'ACTIVE',
+				ledgerId: ledgerId,
         ...or
       },
 			select: {

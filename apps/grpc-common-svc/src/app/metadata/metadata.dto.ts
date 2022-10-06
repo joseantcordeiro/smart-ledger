@@ -1,9 +1,10 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import {
 	FindManyRequest,
-	CreateRequest } from './common.pb';
+	CreateRequest, 
+	FindOneRequest} from '../common.pb';
 
-export class FindMetadataRequestDto implements FindManyRequest {
+export class FindMetadatasRequestDto implements FindManyRequest {
 	@IsString()
 	@IsNotEmpty()
   public readonly targetId: string;
@@ -19,6 +20,17 @@ export class FindMetadataRequestDto implements FindManyRequest {
 
 	@IsString()
 	public readonly orderBy: string = 'asc';
+}
+
+export class FindMetadataRequestDto implements FindOneRequest {
+	@IsString()
+	@IsNotEmpty()
+	public readonly targetId: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public readonly key: string;
+
 }
 
 export class CreateMetadataRequestDto implements CreateRequest {

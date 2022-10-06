@@ -20,10 +20,14 @@ export interface DefaultConfigurationRequest {
   targetId: string;
 }
 
+export interface CreateMany {
+  count: number;
+}
+
 export interface DefaultConfigurationResponse {
   status: number;
   error: string[];
-  data: number;
+  data: CreateMany | undefined;
 }
 
 export interface DefaultMetadataRequest {

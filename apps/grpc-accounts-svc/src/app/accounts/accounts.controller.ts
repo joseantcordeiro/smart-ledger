@@ -1,15 +1,14 @@
 import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { FindAccountsRequestDto,
-	FindAccountRequestDto,
-	FindMetadataRequestDto,
-	CreateMetadataRequestDto } from './accounts.dto';
+import {
+	FindAccountsRequestDto,
+	FindAccountRequestDto
+} from './accounts.dto';
 import {
 	FindAccountResponse,
 	ACCOUNTS_SERVICE_NAME,
-	FindAccountsResponse,
-	FindMetadataResponse,
-	CreateMetadataResponse } from './accounts.pb';
+	FindAccountsResponse
+} from './accounts.pb';
 import { AccountsService } from './accounts.service';
 
 @Controller()

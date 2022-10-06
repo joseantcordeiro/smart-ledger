@@ -20,6 +20,7 @@ export interface Account {
 
 export interface FindAccountRequest {
   name: string;
+  ledgerId: string;
 }
 
 export interface FindAccountResponse {
@@ -33,6 +34,7 @@ export interface FindAccountsRequest {
   take: number;
   skip: number;
   orderBy: string;
+  ledgerId: string;
 }
 
 export interface FindAccountsResponse {
