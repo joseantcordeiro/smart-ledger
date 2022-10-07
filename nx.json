@@ -56,5 +56,5 @@
     ],
     "sharedGlobals": []
   },
-  "defaultProject": "ledger-api"
+  "defaultProject": "grp-api-gateway"
 }

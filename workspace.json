@@ -2,13 +2,11 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "cosmos": "libs/cosmos",
     "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
     "grpc-common-svc": "apps/grpc-common-svc",
     "grpc-ledgers-svc": "apps/grpc-ledgers-svc",
     "grpc-tenants-svc": "apps/grpc-tenants-svc",
-    "ledger-api": "apps/ledger-api",
     "prisma": "libs/prisma",
     "tracing": "libs/tracing",
     "vault": "libs/vault"
