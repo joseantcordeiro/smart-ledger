@@ -1,0 +1,59 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/grpc-transactions-svc/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/grpc-transactions-svc",
+        "main": "apps/grpc-transactions-svc/src/main.ts",
+        "tsConfig": "apps/grpc-transactions-svc/tsconfig.app.json",
+        "assets": ["apps/grpc-transactions-svc/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/grpc-transactions-svc/src/environments/environment.ts",
+              "with": "apps/grpc-transactions-svc/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/js:node",
+      "options": {
+        "buildTarget": "grpc-transactions-svc:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "grpc-transactions-svc:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/grpc-transactions-svc/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/grpc-transactions-svc"],
+      "options": {
+        "jestConfig": "apps/grpc-transactions-svc/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

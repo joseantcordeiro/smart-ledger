@@ -36,7 +36,7 @@ export class TenantsService {
       return { data: null, error: ['Tenant not found'], status: HttpStatus.NOT_FOUND };
     }
 
-    return { data: tenant, error: null, status: HttpStatus.CREATED };
+    return { data: tenant, error: null, status: HttpStatus.OK };
   }
 
 	public async createTenant({ name, identifier, timezone, country }: CreateTenantRequestDto): Promise<CreateTenantResponse> {

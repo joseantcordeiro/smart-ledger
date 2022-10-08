@@ -4,18 +4,10 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "accounts";
 
-export enum Status {
-  ACTIVE = 0,
-  SUSPEND = 1,
-  BANNED = 2,
-  DELETED = 3,
-  UNRECOGNIZED = -1,
-}
-
 export interface Account {
   address: string;
   name: string;
-  status: Status;
+  status: string;
 }
 
 export interface FindAccountRequest {
@@ -49,6 +41,8 @@ export interface AccountsServiceClient {
   findOne(request: FindAccountRequest): Observable<FindAccountResponse>;
 
   findMany(request: FindAccountsRequest): Observable<FindAccountsResponse>;
+
+  createAccount(request: FindAccountRequest): Observable<FindAccountResponse>;
 }
 
 export interface AccountsServiceController {
@@ -59,11 +53,15 @@ export interface AccountsServiceController {
   findMany(
     request: FindAccountsRequest,
   ): Promise<FindAccountsResponse> | Observable<FindAccountsResponse> | FindAccountsResponse;
+
+  createAccount(
+    request: FindAccountRequest,
+  ): Promise<FindAccountResponse> | Observable<FindAccountResponse> | FindAccountResponse;
 }
 
 export function AccountsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne", "findMany"];
+    const grpcMethods: string[] = ["findOne", "findMany", "createAccount"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AccountsService", method)(constructor.prototype[method], method, descriptor);

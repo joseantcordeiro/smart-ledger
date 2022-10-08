@@ -7,6 +7,7 @@
     "grpc-common-svc": "apps/grpc-common-svc",
     "grpc-ledgers-svc": "apps/grpc-ledgers-svc",
     "grpc-tenants-svc": "apps/grpc-tenants-svc",
+    "grpc-transactions-svc": "apps/grpc-transactions-svc",
     "prisma": "libs/prisma",
     "tracing": "libs/tracing",
     "vault": "libs/vault"

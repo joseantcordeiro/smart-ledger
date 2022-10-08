@@ -21,6 +21,11 @@ export class AccountsController {
     return this.service.findOne(payload);
   }
 
+	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'CreateAccount')
+  private createAccount(payload: FindAccountRequestDto): Promise<FindAccountResponse> {
+    return this.service.createAccount(payload);
+  }
+
 	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'FindMany')
   private findMany(payload: FindAccountsRequestDto): Promise<FindAccountsResponse> {
     return this.service.findMany(payload);

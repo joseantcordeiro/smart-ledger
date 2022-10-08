@@ -27,6 +27,14 @@ export class AccountsController implements OnModuleInit {
     return this.svc.findOne({ name, ledgerId });
   }
 
+	@Post(':name/:ledgerId')
+  private async createAccount(
+		@Param('name') name: string,
+		@Param('ledgerId') ledgerId: string
+		): Promise<Observable<FindAccountResponse>> {
+    return this.svc.createAccount({ name, ledgerId });
+  }
+
 	@Get(':ledgerId')
   private async findMany(
 		@Param('ledgerId') ledgerId: string,

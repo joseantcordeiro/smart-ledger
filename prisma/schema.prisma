@@ -16,6 +16,12 @@ enum Status {
 	DELETED
 }
 
+enum batchStatus {
+	CREATED
+	FINISHED
+	PROCESSING
+}
+
 model tenants {
 	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String 	 @db.VarChar(100)
@@ -55,9 +61,9 @@ model ledgers {
 }
 
 model configuration {
-	targetId 	String 	  @db.VarChar
-	key 		 	String 	  @db.VarChar
-	value 	 	String 	  @db.VarChar
+	targetId 	String 	  @db.VarChar(50)
+	key 		 	String 	  @db.VarChar(50)
+	value 	 	String 	  @db.VarChar(100)
 	timestamp DateTime 	@default(now())
 
 	@@unique([targetId, key])
@@ -74,7 +80,7 @@ model countries {
 
 model accounts {
   address   String  @unique @db.VarChar
-	name 		  String  @db.VarChar
+	name 		  String  @db.VarChar(50)
 	status    Status  @default(ACTIVE)
 	ledgerId  String  @db.VarChar(50)
 	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
@@ -85,9 +91,9 @@ model accounts {
 }
 
 model metadata {
-	targetId 	String 	  @db.VarChar
-	key 		 	String 	  @db.VarChar
-	value 	 	String 	  @db.VarChar
+	targetId 	String 	  @db.VarChar(50)
+	key 		 	String 	  @db.VarChar(50)
+	value 	 	String 	  @db.VarChar(100)
 	timestamp DateTime 	@default(now())
 
 	@@unique([targetId, key])
@@ -96,9 +102,9 @@ model metadata {
 
 model assets {
 	contract  String 	 @unique @db.VarChar
-	name 		  String 	 @db.VarChar
-	symbol 	  String 	 @db.VarChar
-	ownerAcc  String 	 @db.VarChar
+	name 		  String 	 @db.VarChar(20)
+	symbol 	  String 	 @db.VarChar(4)
+	ownerAcc  String 	 @db.VarChar(50)
 	ledgerId  String   @db.VarChar(50)
 	ledger	  ledgers  @relation(fields: [ledgerId], references: [id])
 	timestamp DateTime @default(now())
@@ -114,4 +120,31 @@ model volumes {
 	out			Float	 @default(0.00)
 
 	@@unique([account, asset])
+}
+
+model batches {
+	id				String   		@id @default(cuid()) @db.VarChar(50)
+	postings  Json
+	status 		batchStatus @default(CREATED)
+	timestamp DateTime 		@default(now())
+	ledgerId  String   		@db.VarChar(50)
+
+}
+
+model postings {
+	id					String  @id @default(cuid()) @db.VarChar(50)
+	source 			String  @db.VarChar(50)
+	destination String  @db.VarChar(50)
+	asset 	 		String  @db.VarChar(4)
+	value 			Float
+	txId 				String? @db.VarChar(50)
+	ledgerId  	String  @db.VarChar(50)
+}
+
+model transactions {
+	id				String    @id @default(cuid()) @db.VarChar(50)
+	hash 			String    @db.VarChar
+	receipt	  String 	  @db.VarChar
+	timestamp DateTime 	@default(now())
+	ledgerId  String   	@db.VarChar(50)
 }
