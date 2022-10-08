@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CreateBatchRequest, Posting } from './transactions.pb';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { CreateBatchRequest } from './transactions.pb';
 
 export class PostingsDto {
 	@IsString()
@@ -12,7 +12,7 @@ export class PostingsDto {
 
 	@IsString()
 	@IsNotEmpty()
-  public readonly countasset: string;
+  public readonly asset: string;
 
 	@IsNumber()
 	public readonly value: number;
@@ -24,5 +24,7 @@ export class CreateBatchRequestDto implements CreateBatchRequest {
 	@IsNotEmpty()
 	public readonly ledgerId: string;
 
-	public readonly postings: Posting[];
+	@IsArray()
+	@IsNotEmpty()
+	public readonly postings: PostingsDto[];
 }

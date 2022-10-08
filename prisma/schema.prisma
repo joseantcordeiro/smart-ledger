@@ -114,10 +114,10 @@ model assets {
 }
 
 model volumes {
-	account String @db.VarChar(50)
-	asset	 	String @db.VarChar(10)
-	in	 		Float  @default(0.00)
-	out			Float	 @default(0.00)
+	account String 	@db.VarChar(50)
+	asset	 	String 	@db.VarChar(10)
+	in	 		Decimal @default(0.00) @db.Money
+	out			Decimal	@default(0.00) @db.Money
 
 	@@unique([account, asset])
 }
@@ -138,6 +138,7 @@ model postings {
 	asset 	 		String  @db.VarChar(4)
 	value 			Float
 	txId 				String? @db.VarChar(50)
+	batchId 		String? @db.VarChar(50)
 	ledgerId  	String  @db.VarChar(50)
 }
 

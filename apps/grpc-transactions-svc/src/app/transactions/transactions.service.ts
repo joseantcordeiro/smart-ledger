@@ -1,16 +1,19 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
-import { CreateBatchRequestDto } from './transactions.dto';
+import { Prisma } from "@prisma/client";
+import { CreateBatchRequestDto, PostingsDto } from './transactions.dto';
 import { CreateBatchResponse, Posting } from './transactions.pb';
 
 @Injectable()
 export class TransactionsService {
 	constructor(private prisma: PrismaService) {}
 
-	public async createBatch(ledgerId: string, postings: Posting[]): Promise<CreateBatchResponse> {
+	public async createBatch({ ledgerId, postings }: CreateBatchRequestDto): Promise<CreateBatchResponse> {
 		
+		const json = postings as Prisma.JsonArray;
+
 		const batch = await this.prisma.batches.create({
-			data: { postings: postings, ledgerId: ledgerId },
+			data: { postings: json, ledgerId: ledgerId },
 			select: {
 				id: true,
         postings: true,

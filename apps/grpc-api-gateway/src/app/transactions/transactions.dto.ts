@@ -11,7 +11,7 @@ export class CreateBatchBodyDto {
 
 	@IsString()
 	@IsNotEmpty()
-  public readonly countasset: string;
+  public readonly asset: string;
 
 	@IsNumber()
 	public readonly value: number;

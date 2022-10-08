@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, OnModuleInit, Param, ParseArrayPipe, Post } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
@@ -6,7 +6,7 @@ import {
   TRANSACTIONS_SERVICE_NAME,
 	CreateBatchResponse
 } from './transactions.pb';
-import { CreateBatchBodyDto } from 'transactions.dto';
+import { CreateBatchBodyDto } from './transactions.dto';
 
 @Controller('transactions')
 export class TransactionsController implements OnModuleInit {
@@ -22,8 +22,10 @@ export class TransactionsController implements OnModuleInit {
 	@Post(':ledgerId/batch')
   private async createBatch(
 		@Param('ledgerId') ledgerId: string,
-    @Body() postings: CreateBatchBodyDto[],
+    @Body(new ParseArrayPipe({ items: CreateBatchBodyDto })) postings: CreateBatchBodyDto[],
   ): Promise<Observable<CreateBatchResponse>> {
+		console.log(JSON.stringify(postings));
+		
 		return this.svc.createBatch({ ledgerId, postings });
   }
 
