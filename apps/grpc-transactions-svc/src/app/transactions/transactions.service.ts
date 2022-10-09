@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
 import { Prisma } from "@prisma/client";
-import { CreateBatchRequestDto, PostingsDto } from './transactions.dto';
-import { CreateBatchResponse, Posting } from './transactions.pb';
+import { CreateBatchRequestDto } from './transactions.dto';
+import { CreateBatchResponse } from './transactions.pb';
 
 @Injectable()
 export class TransactionsService {

@@ -24,7 +24,7 @@ enum batchStatus {
 
 model tenants {
 	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
-	identifier 	 String 	 @db.VarChar(100)
+	identifier 	 String 	 @db.VarChar(50)
 	name			 	 String 	 @db.VarChar(100)
 	country_code String 	 @db.VarChar(2)
 	country			 countries @relation(fields: [country_code], references: [code])
@@ -136,7 +136,7 @@ model postings {
 	source 			String  @db.VarChar(50)
 	destination String  @db.VarChar(50)
 	asset 	 		String  @db.VarChar(4)
-	value 			Float
+	value 			Decimal @db.Money
 	txId 				String? @db.VarChar(50)
 	batchId 		String? @db.VarChar(50)
 	ledgerId  	String  @db.VarChar(50)
