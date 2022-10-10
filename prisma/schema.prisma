@@ -116,15 +116,14 @@ model assets {
 model volumes {
 	account String 	@db.VarChar(50)
 	asset	 	String 	@db.VarChar(10)
-	in	 		Decimal @default(0.00) @db.Money
-	out			Decimal	@default(0.00) @db.Money
+	in	 		Decimal @default(0.00)
+	out			Decimal	@default(0.00)
 
 	@@unique([account, asset])
 }
 
 model batches {
 	id				String   		@id @default(cuid()) @db.VarChar(50)
-	postings  Json
 	status 		batchStatus @default(CREATED)
 	timestamp DateTime 		@default(now())
 	ledgerId  String   		@db.VarChar(50)
@@ -136,9 +135,9 @@ model postings {
 	source 			String  @db.VarChar(50)
 	destination String  @db.VarChar(50)
 	asset 	 		String  @db.VarChar(4)
-	value 			Decimal @db.Money
+	value 			Decimal @db.Decimal(10,2)
 	txId 				String? @db.VarChar(50)
-	batchId 		String? @db.VarChar(50)
+	batchId 		String  @db.VarChar(50)
 	ledgerId  	String  @db.VarChar(50)
 }
 

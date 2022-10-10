@@ -13,7 +13,6 @@ export interface Posting {
 
 export interface Batch {
   id: string;
-  postings: Posting[];
   status: string;
 }
 

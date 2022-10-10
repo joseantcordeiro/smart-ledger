@@ -12,13 +12,13 @@ export class AccountsService {
 		private prisma: PrismaService,
 		private readonly web3Service: Web3Service) {}
 
-  public async findOne({ name, ledger_id }: FindAccountRequestDto): Promise<FindAccountResponse> {
+  public async findOne({ name, ledgerId }: FindAccountRequestDto): Promise<FindAccountResponse> {
 		
 		const account = await this.prisma.accounts.findUnique({
 			where: {
 				name_ledgerId: {
 					name: name,
-					ledgerId: ledger_id
+					ledgerId: ledgerId
 				}
 			},
 			select: {
@@ -35,18 +35,18 @@ export class AccountsService {
     return { data: account, error: null, status: HttpStatus.OK };
   }
 
-	public async findMany({ search_string, take, skip, order_by, ledger_id }: FindAccountsRequestDto): Promise<FindAccountsResponse> {
-		const or = search_string ? {
+	public async findMany({ searchString, take, skip, orderBy, ledgerId }: FindAccountsRequestDto): Promise<FindAccountsResponse> {
+		const or = searchString ? {
       OR: [
-        { name: { contains: search_string } },
-        { address: { contains: search_string } },
+        { name: { contains: searchString } },
+        { address: { contains: searchString } },
       ],
     } : {};
 
 		const accounts = await this.prisma.accounts.findMany({
 			where: {
         status: 'ACTIVE',
-				ledgerId: ledger_id,
+				ledgerId: ledgerId,
         ...or
       },
 			select: {
@@ -57,7 +57,7 @@ export class AccountsService {
 			take: Number(take) || undefined,
       skip: Number(skip) || undefined,
       //orderBy: {
-      //  name: order_by
+      //  name: orderBy
       //}
 		});
 
@@ -68,7 +68,7 @@ export class AccountsService {
     return { data: accounts, error: null, status: HttpStatus.OK };
   }
 
-	public async createAccount({ name, ledger_id }: FindAccountRequestDto): Promise<FindAccountResponse> {
+	public async createAccount({ name, ledgerId }: FindAccountRequestDto): Promise<FindAccountResponse> {
 		
 		// TODO check if account already exists
 
@@ -98,7 +98,7 @@ export class AccountsService {
 		});
 
 		const account = await this.prisma.accounts.create({
-			data: { address: ethAccount.address, name: name, ledgerId: ledger_id },
+			data: { address: ethAccount.address, name: name, ledgerId: ledgerId },
 			select: {
 				address: true,
 				name: true,
