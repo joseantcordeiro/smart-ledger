@@ -19,10 +19,12 @@ export class TransactionsService {
 		})
 
 		if (!batch) {
-      return { data: null, error: ['Batch not created'], status: HttpStatus.NOT_FOUND };
+      return { data: null, error: ['Batch not created'], status: HttpStatus.NOT_MODIFIED };
     }
 
+		let counter = 0;
 		for (let i = 0; i < postings.length; i++) {
+			// TODO check if account exists and is active
 			const posting = await this.prisma.postings.create({
 				data: {
 					source: postings[i].source,
@@ -33,12 +35,28 @@ export class TransactionsService {
 					ledgerId: batch.ledgerId
 				}
 			});
+
+			counter++;
 	 
 			// printing element
-			console.log("key : ",i, "value : ",JSON.stringify(posting));
+			console.log("key : ", i, "counter : ", counter, "value : ", JSON.stringify(posting));
 		};
 
-    return { data: batch, error: null, status: HttpStatus.CREATED };
+		const updateBatch = await this.prisma.batches.update({
+			where: {
+				id: batch.id,
+			},
+			data: {
+				counter: counter
+			},
+			select: {
+				id: true,
+        status: true,
+				counter: true
+			}
+		})
+
+    return { data: updateBatch, error: null, status: HttpStatus.CREATED };
 		
 	}
 

@@ -104,7 +104,7 @@ model assets {
 	contract  String 	 @unique @db.VarChar
 	name 		  String 	 @db.VarChar(20)
 	symbol 	  String 	 @db.VarChar(4)
-	ownerAcc  String 	 @db.VarChar(50)
+	owner		  String 	 @db.VarChar(50)
 	ledgerId  String   @db.VarChar(50)
 	ledger	  ledgers  @relation(fields: [ledgerId], references: [id])
 	timestamp DateTime @default(now())
@@ -125,6 +125,7 @@ model volumes {
 model batches {
 	id				String   		@id @default(cuid()) @db.VarChar(50)
 	status 		batchStatus @default(CREATED)
+	counter  	Int 			  @default(0) @db.SmallInt
 	timestamp DateTime 		@default(now())
 	ledgerId  String   		@db.VarChar(50)
 
@@ -136,8 +137,8 @@ model postings {
 	destination String  @db.VarChar(50)
 	asset 	 		String  @db.VarChar(4)
 	value 			Decimal @db.Decimal(10,2)
-	txId 				String? @db.VarChar(50)
 	batchId 		String  @db.VarChar(50)
+	txId 				String? @db.VarChar(50)
 	ledgerId  	String  @db.VarChar(50)
 }
 

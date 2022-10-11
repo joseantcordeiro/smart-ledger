@@ -1,17 +1,23 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
+import { EthService } from "@ledger/eth";
 import {
 	FindLedgerRequestDto,
 	CreateLedgerRequestDto,
+	CreateAssetRequestDto,
 } from './ledgers.dto';
 import {
 	FindLedgerResponse,
 	CreateLedgerResponse,
+	CreateAssetResponse,
 } from './ledgers.pb';
 
 @Injectable()
 export class LedgersService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private readonly eth: EthService
+	) {}
 
 	public async findOne({ id }: FindLedgerRequestDto): Promise<FindLedgerResponse> {
 		
@@ -65,6 +71,47 @@ export class LedgersService {
 
     return count.count;
   }
+
+	public async createAsset({ name, symbol, ledgerId }: CreateAssetRequestDto): Promise<CreateAssetResponse> {
+
+		const admin = await this.prisma.accounts.findUnique({
+			where: {
+				name_ledgerId: {
+					name: 'ledger:admin',
+					ledgerId: ledgerId
+				}
+			},
+			select: {
+				address: true,
+				name: true,
+				status: true
+			},
+		});
+
+		const contract = await this.eth.deployAsset(admin.address);
+
+		const asset = await this.prisma.assets.create({
+			data: {
+				contract: contract,
+				name: name,
+				symbol: symbol,
+				owner: admin.name,
+				ledger: {
+					connect: { id: ledgerId },
+				},
+			},
+			select: {
+				contract: true,
+				name: true,
+        symbol: true,
+				owner: true,
+        ledgerId: true
+			}
+		});
+
+		return { data: asset, error: null, status: HttpStatus.CREATED };
+
+	}
 
 
 }

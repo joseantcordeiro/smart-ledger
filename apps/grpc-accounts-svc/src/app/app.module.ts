@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
-import { Web3Module } from 'nest-web3';
+// import { Web3Module } from 'nest-web3';
+import { EthModule } from '@ledger/eth';
 import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
-		Web3Module.forRoot({
-			name: 'eth',
-			url: 'http://joseantcordeiro.hopto.org:8545',
-		}),
+		EthModule,
 		AccountsModule],
   controllers: [],
   providers: [],

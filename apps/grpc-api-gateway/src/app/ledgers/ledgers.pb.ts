@@ -9,6 +9,14 @@ export interface Ledger {
   name: string;
 }
 
+export interface Asset {
+  contract: string;
+  name: string;
+  symbol: string;
+  owner: string;
+  ledgerId: string;
+}
+
 export interface FindLedgerRequest {
   id: string;
 }
@@ -30,12 +38,26 @@ export interface CreateLedgerResponse {
   data: Ledger | undefined;
 }
 
+export interface CreateAssetRequest {
+  name: string;
+  symbol: string;
+  ledgerId: string;
+}
+
+export interface CreateAssetResponse {
+  status: number;
+  error: string[];
+  data: Asset | undefined;
+}
+
 export const LEDGERS_PACKAGE_NAME = "ledgers";
 
 export interface LedgersServiceClient {
   findOne(request: FindLedgerRequest): Observable<FindLedgerResponse>;
 
   createLedger(request: CreateLedgerRequest): Observable<CreateLedgerResponse>;
+
+  createAsset(request: CreateAssetRequest): Observable<CreateAssetResponse>;
 }
 
 export interface LedgersServiceController {
@@ -46,11 +68,15 @@ export interface LedgersServiceController {
   createLedger(
     request: CreateLedgerRequest,
   ): Promise<CreateLedgerResponse> | Observable<CreateLedgerResponse> | CreateLedgerResponse;
+
+  createAsset(
+    request: CreateAssetRequest,
+  ): Promise<CreateAssetResponse> | Observable<CreateAssetResponse> | CreateAssetResponse;
 }
 
 export function LedgersServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne", "createLedger"];
+    const grpcMethods: string[] = ["findOne", "createLedger", "createAsset"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("LedgersService", method)(constructor.prototype[method], method, descriptor);

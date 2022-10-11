@@ -2,6 +2,7 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "eth": "libs/eth",
     "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
     "grpc-common-svc": "apps/grpc-common-svc",

@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@ledger/eth": ["libs/eth/src/index.ts"],
       "@ledger/prisma": ["libs/prisma/src/index.ts"],
       "@ledger/vault": ["libs/vault/src/index.ts"],
       "@smart-ledger/cosmos": ["libs/cosmos/src/index.ts"],

@@ -14,6 +14,7 @@ export interface Posting {
 export interface Batch {
   id: string;
   status: string;
+  counter: number;
 }
 
 export interface CreateBatchRequest {
@@ -46,6 +47,7 @@ export interface UpdateBatchStatusRequest {
 export interface UpdateBatchStatusResponse {
   status: number;
   error: string[];
+  data: Batch | undefined;
 }
 
 export const TRANSACTIONS_PACKAGE_NAME = "transactions";
