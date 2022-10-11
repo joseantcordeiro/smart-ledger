@@ -16,6 +16,7 @@
     "proto:gateway-transactions": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/smart-ledger-proto/proto --ts_proto_out=apps/grpc-api-gateway/src/app/transactions/ node_modules/smart-ledger-proto/proto/transactions.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:all": "npm run proto:common & npm run proto:gateway-common & npm run proto:accounts & npm run proto:gateway-accounts & npm run proto:tenants & npm run proto:gateway-tenants & npm run proto:ledgers & npm run proto:gateway-ledgers & npm run proto:transactions & npm run proto:gateway-transactions",
     "timezones": "ts-node prisma/timezones.ts",
+    "vault:test": "ts-node libs/eth/src/lib/vault.ts",
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test"

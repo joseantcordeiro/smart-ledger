@@ -1,4 +1,4 @@
-import request from "request-promise-native";
+import request = require("request-promise-native");
 import { VaultKubernetesAuthClient } from "./auth/kubernetes";
 import { IVaultKubernetesAuthLoginConfig } from "./auth/kubernetes_types";
 import { IVaultAuthProvider, VaultTokenClient } from "./auth/token";

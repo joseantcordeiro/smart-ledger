@@ -88,7 +88,7 @@ export class LedgersService {
 			},
 		});
 
-		const contract = await this.eth.deployAsset(admin.address);
+		const contract = await this.eth.deployAsset(admin.address, name, symbol);
 
 		const asset = await this.prisma.assets.create({
 			data: {

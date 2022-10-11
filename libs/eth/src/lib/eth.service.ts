@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Web3Service } from "nest-web3";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const request = require('request');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require('fs');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const solc = require('solc');
+import { KV2VaultClient, Vault } from '@ledger/vault';
+import fs = require('fs');
+import solc = require('solc');
+import { abi, bytecode } from './constants';
+
+const vault = new Vault({
+	vaultAddress: "http://joseantcordeiro.hopto.org:8200",
+	vaultToken: "s.AwmKlMHrVdNq3GNyM88C1SyY"
+});
 
 @Injectable()
 export class EthService {
 	constructor(
 		private readonly web3Service: Web3Service) {}
+
+		private kv2: KV2VaultClient = vault.KV(2);
 
 		private async compileAsset() {
 			const source = fs.readFileSync('LedgerCoin.sol', 'utf8');
@@ -39,33 +44,16 @@ export class EthService {
 
 		}
 
-		public async deployAsset(address: string): Promise<string> {
+		public async deployAsset(address: string, name: string, symbol: string): Promise<string> {
 			const web3 = this.web3Service.getClient('eth');
 
-			const options = {
-				'method': 'GET',
-				'url': 'http://joseantcordeiro.hopto.org:8200/v1/secret/data/' + address,
-				'headers': {
-					'X-Vault-Token': 's.AwmKlMHrVdNq3GNyM88C1SyY',
-					'Content-Type': 'application/json'
-				}			
-			};
-			const response = request(options, function (error: string | undefined, response: { body: any; }) {
-				if (error) throw new Error(error);
-				console.log(response.body);
-			});
+			const secret = await this.kv2.read(address);
 
 			// 3. Create address variables
 			const accountFrom = {
-				privateKey: response.body.data.data.privateKey,
+				privateKey: secret.data.data.privateKey,
 				address: address,
 			};
-
-			// 4. Get the bytecode and API
-			const bytecode = fs.readFileSync('LedgerCoin_sol_LedgerCoin.bin').toString();
-			// const bytecode = contractFile.evm.bytecode.object;
-			// const abi = contractFile.abi;
-			const abi = JSON.parse(fs.readFileSync('LedgerCoin_sol_LedgerCoin.abi').toString());
 
 			// 6. Create contract instance
 			const ledgerCoin = new web3.eth.Contract(abi);
@@ -73,6 +61,7 @@ export class EthService {
 			// 7. Create constructor tx
 			const ledgerCoinTx = ledgerCoin.deploy({
 				data: bytecode,
+				arguments: [name, symbol]
 			});
 
 			// 8. Sign transacation and send
@@ -93,26 +82,10 @@ export class EthService {
 			const web3 = this.web3Service.getClient('eth');
 			const ethAccount = web3.eth.accounts.create();
 
-			const options = {
-				'method': 'POST',
-				'url': 'http://joseantcordeiro.hopto.org:8200/v1/secret/data/' + ethAccount.address,
-				'headers': {
-					'X-Vault-Token': 's.AwmKlMHrVdNq3GNyM88C1SyY',
-					'Content-Type': 'application/json'
+			await this.kv2.create(ethAccount.address, {
+				data: {
+						privatekey: ethAccount.privateKey,
 				},
-				body: JSON.stringify({
-					"options": {
-						"cas": 0
-					},
-					"data": {
-						"privateKey": ethAccount.privateKey,
-					}
-				})
-			
-			};
-			request(options, function (error: string | undefined, response: { body: any; }) {
-				if (error) throw new Error(error);
-				console.log(response.body);
 			});
 
 			return ethAccount.address;

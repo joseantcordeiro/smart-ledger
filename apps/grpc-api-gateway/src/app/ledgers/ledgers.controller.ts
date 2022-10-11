@@ -5,7 +5,8 @@ import {
   FindLedgerResponse,
   LedgersServiceClient,
   LEDGERS_SERVICE_NAME,
-	CreateLedgerResponse
+	CreateLedgerResponse,
+	CreateAssetResponse
 } from './ledgers.pb';
 
 @Controller('ledgers')
@@ -31,6 +32,16 @@ export class LedgersController implements OnModuleInit {
   ): Promise<Observable<CreateLedgerResponse>> {
 		const name = createLedger.name;
 		return this.svc.createLedger({ tenantId, name });
+  }
+
+	@Post(':ledgerId/asset')
+  private async createAsset(
+		@Param('ledgerId') ledgerId: string,
+    @Body() createAsset: { name: string, symbol: string},
+  ): Promise<Observable<CreateAssetResponse>> {
+		const name = createAsset.name;
+		const symbol = createAsset.symbol;
+		return this.svc.createAsset({ name, symbol, ledgerId });
   }
 	
 }
