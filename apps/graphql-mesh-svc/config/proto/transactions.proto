@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package transactions;
+
+service TransactionsService {
+	rpc CreateBatch (CreateBatchRequest) returns (CreateBatchResponse) {}
+	rpc CreatePosting (CreatePostingRequest) returns (CreatePostingResponse) {}
+	rpc UpdateBatchStatus (UpdateBatchStatusRequest) returns (UpdateBatchStatusResponse) {}
+}
+
+message Posting {
+	string source = 1;
+	string destination = 2;
+	string asset = 3;
+	float  value = 4;
+}
+
+message Batch {
+	string id = 1;
+	string status = 2;
+	int32 counter = 3;
+}
+
+message CreateBatchRequest {
+	string ledger_id = 1;
+	repeated Posting postings = 2;
+}
+
+message CreateBatchResponse {
+	int32 status = 1;
+  repeated string error = 2;
+	Batch data = 3;
+}
+
+message CreatePostingRequest {
+	string ledger_id = 1;
+	Posting posting = 2;
+}
+
+message CreatePostingResponse {
+	int32 status = 1;
+  repeated string error = 2;
+	Posting data = 3;
+}
+
+message UpdateBatchStatusRequest {
+	string ledger_id = 1;
+	string status = 2;
+}
+
+message UpdateBatchStatusResponse {
+	int32 status = 1;
+  repeated string error = 2;
+	Batch data = 3;
+}

@@ -1,0 +1,46 @@
+sources:
+  - name: grpc-accounts-svc
+    handler:
+      grpc:
+        endpoint: localhost:50053
+        protoFilePath: ./proto/accounts.proto
+  - name: grpc-ledgers-svc
+    handler:
+      grpc:
+        endpoint: localhost:50052
+        protoFilePath: ./proto/ledgers.proto
+
+# additionalTypeDefs: |
+#  extend type User {
+#     company: Company
+#   }
+#   extend type Company {
+#     employers: [User]
+#   }
+
+# transforms:
+#   - namingConvention:
+#       typeNames: pascalCase
+#       fieldNames: camelCase
+#   - mock:
+#       mocks:
+#         - apply: User.firstName
+#           faker: '{{name.firstName}}'
+#         - apply: User.lastName
+#           faker: '{{name.lastName}}'
+#         - apply: User.jobTitle
+#           faker: '{{name.jobTitle}}'
+#         - apply: Company.name
+#           faker: '{{company.companyName}}'
+
+cache:
+  redis:
+    host: joseantcordeiro.hopto.org
+    port: 16379
+    password: KXfgU0p3pAWp
+
+documents:
+  - ../src/example-query.graphql
+
+serve:
+  playground: true

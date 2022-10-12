@@ -57,7 +57,6 @@ export class TransactionsService {
 		})
 
     return { data: updateBatch, error: null, status: HttpStatus.CREATED };
-		
 	}
 
 }

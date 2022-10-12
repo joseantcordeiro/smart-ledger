@@ -1,0 +1,15 @@
+module.exports = {
+  displayName: 'graphql-mesh-svc',
+  preset: '../../jest.preset.js',
+  transform: {
+    '^.+\\.[tj]sx?$': [
+      'babel-jest',
+      { cwd: __dirname, configFile: './babel-jest.config.json' },
+    ],
+  },
+  moduleFileExtensions: ['ts', 'js'],
+  coverageDirectory: '../../coverage/apps/graphql-mesh-svc',
+  collectCoverage: true,
+  coverageReporters: ['json', 'lcov', 'text', 'clover', 'html'],
+  resolver: '@nrwl/jest/plugins/resolver',
+};

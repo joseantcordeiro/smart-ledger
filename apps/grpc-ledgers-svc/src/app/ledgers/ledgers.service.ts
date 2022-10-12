@@ -39,9 +39,14 @@ export class LedgersService {
   }
 
 	public async createLedger({ tenantId, name }: CreateLedgerRequestDto): Promise<CreateLedgerResponse> {
+		const ethAccount = await this.eth.createAccount();
+
 		const ledger = await this.prisma.ledgers.create({
 			data: {
 				name: name,
+				accounts: {
+					create: { address: ethAccount, name: 'ledger:admin' },
+				},
 				tenant: {
 					connect: { id: tenantId },
 				},
@@ -54,13 +59,13 @@ export class LedgersService {
 
 		const count = await this.ledgerDefaultConfiguration(ledger.id);
 		if (count < 1) {
-      return { data: ledger, error: ['Default tenant configuration not created'], status: HttpStatus.CREATED };
+      return { data: ledger, error: ['Default ledger configuration not created'], status: HttpStatus.CREATED };
     }
 
     return { data: ledger, error: null, status: HttpStatus.CREATED };
   }
 
-	public async ledgerDefaultConfiguration(targetId: string): Promise<number> {
+	private async ledgerDefaultConfiguration(targetId: string): Promise<number> {
 		const count = await this.prisma.configuration.createMany({
 			data: [
 				{ targetId: targetId, key: 'LANGUAGUE', value: 'EN' },
@@ -110,7 +115,6 @@ export class LedgersService {
 		});
 
 		return { data: asset, error: null, status: HttpStatus.CREATED };
-
 	}
 
 

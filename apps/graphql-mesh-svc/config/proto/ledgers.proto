@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package ledgers;
+
+service LedgersService {
+  rpc FindOne (FindLedgerRequest) returns (FindLedgerResponse) {}
+	rpc CreateLedger (CreateLedgerRequest) returns (CreateLedgerResponse) {}
+	rpc CreateAsset (CreateAssetRequest) returns (CreateAssetResponse) {}
+}
+
+message Ledger {
+  string id = 1;
+	string name = 2;
+}
+
+message Asset {
+	string contract = 1;
+	string name = 2;
+	string symbol = 3;
+	string owner = 4;
+	string ledger_id = 5;
+}
+
+message FindLedgerRequest {
+  string id = 1;
+}
+
+message FindLedgerResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  Ledger data = 3;
+}
+
+message CreateLedgerRequest {
+	string tenant_id = 1;
+  string name = 2;
+}
+
+message CreateLedgerResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  Ledger data = 3;
+}
+
+message CreateAssetRequest {
+	string name = 1;
+  string symbol = 2;
+	string ledger_id = 3;
+}
+
+message CreateAssetResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  Asset data = 3;
+}
