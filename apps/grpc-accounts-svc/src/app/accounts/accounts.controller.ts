@@ -2,12 +2,14 @@ import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import {
 	FindAccountsRequestDto,
-	FindAccountRequestDto
+	FindAccountRequestDto,
+	FindBalanceRequestDto
 } from './accounts.dto';
 import {
 	FindAccountResponse,
 	ACCOUNTS_SERVICE_NAME,
-	FindAccountsResponse
+	FindAccountsResponse,
+	FindBalanceResponse
 } from './accounts.pb';
 import { AccountsService } from './accounts.service';
 
@@ -29,6 +31,11 @@ export class AccountsController {
 	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'FindMany')
   private findMany(payload: FindAccountsRequestDto): Promise<FindAccountsResponse> {
     return this.service.findMany(payload);
+  }
+
+	@GrpcMethod(ACCOUNTS_SERVICE_NAME, 'Balance')
+  private balance(payload: FindBalanceRequestDto): Promise<FindBalanceResponse> {
+    return this.service.balance(payload);
   }
 
 }

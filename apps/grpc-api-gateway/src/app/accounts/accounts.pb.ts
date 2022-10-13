@@ -10,6 +10,12 @@ export interface Account {
   status: string;
 }
 
+export interface Balance {
+  name: string;
+  symbol: string;
+  amount: number;
+}
+
 export interface FindAccountRequest {
   name: string;
   ledgerId: string;
@@ -35,6 +41,18 @@ export interface FindAccountsResponse {
   data: Account[];
 }
 
+export interface FindBalanceRequest {
+  name: string;
+  symbol: string;
+  ledgerId: string;
+}
+
+export interface FindBalanceResponse {
+  status: number;
+  error: string[];
+  data: Balance | undefined;
+}
+
 export const ACCOUNTS_PACKAGE_NAME = "accounts";
 
 export interface AccountsServiceClient {
@@ -43,6 +61,8 @@ export interface AccountsServiceClient {
   findMany(request: FindAccountsRequest): Observable<FindAccountsResponse>;
 
   createAccount(request: FindAccountRequest): Observable<FindAccountResponse>;
+
+  balance(request: FindBalanceRequest): Observable<FindBalanceResponse>;
 }
 
 export interface AccountsServiceController {
@@ -57,11 +77,15 @@ export interface AccountsServiceController {
   createAccount(
     request: FindAccountRequest,
   ): Promise<FindAccountResponse> | Observable<FindAccountResponse> | FindAccountResponse;
+
+  balance(
+    request: FindBalanceRequest,
+  ): Promise<FindBalanceResponse> | Observable<FindBalanceResponse> | FindBalanceResponse;
 }
 
 export function AccountsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["findOne", "findMany", "createAccount"];
+    const grpcMethods: string[] = ["findOne", "findMany", "createAccount", "balance"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AccountsService", method)(constructor.prototype[method], method, descriptor);

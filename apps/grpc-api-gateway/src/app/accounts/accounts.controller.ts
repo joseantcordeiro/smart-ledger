@@ -1,11 +1,12 @@
-import { Controller, Get, Inject, OnModuleInit, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, Query } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
   FindAccountResponse,
 	FindAccountsResponse,
   AccountsServiceClient,
-  ACCOUNTS_SERVICE_NAME
+  ACCOUNTS_SERVICE_NAME,
+	FindBalanceResponse
 } from './accounts.pb';
 
 @Controller('accounts')
@@ -44,6 +45,16 @@ export class AccountsController implements OnModuleInit {
     @Query('orderBy') orderBy?: 'asc' | 'desc',
   ): Promise<Observable<FindAccountsResponse>> {
 		return this.svc.findMany({ searchString, take, skip, orderBy, ledgerId });
+  }
+
+	@Get(':ledgerId/balance')
+  private async balance(
+		@Param('ledgerId') ledgerId: string,
+		@Body() BodyInput: { name: string, symbol: string },
+	): Promise<Observable<FindBalanceResponse>> {
+			const name = BodyInput.name;
+			const symbol = BodyInput.symbol;
+    return this.svc.balance({ name, symbol, ledgerId });
   }
 	
 }

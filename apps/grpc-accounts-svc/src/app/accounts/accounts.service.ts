@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@ledger/prisma';
 import { EthService } from '@ledger/eth';
-import { FindAccountsRequestDto, FindAccountRequestDto } from './accounts.dto';
-import { FindAccountsResponse, FindAccountResponse } from './accounts.pb';
+import { FindAccountsRequestDto, FindAccountRequestDto, FindBalanceRequestDto } from './accounts.dto';
+import { FindAccountsResponse, FindAccountResponse, FindBalanceResponse } from './accounts.pb';
 
 @Injectable()
 export class AccountsService {
@@ -86,6 +86,43 @@ export class AccountsService {
     }
 
     return { data: account, error: null, status: HttpStatus.CREATED };
+  }
+
+	public async balance({ name, symbol, ledgerId }: FindBalanceRequestDto): Promise<FindBalanceResponse> {
+		
+		const account = await this.findOne({ name, ledgerId });
+
+    if (account.status != HttpStatus.OK) {
+      return { data: null, error: ['Account not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+		const asset = await this.prisma.assets.findUnique({
+			where: {
+				ledgerId_symbol: {
+					ledgerId: ledgerId,
+					symbol: symbol
+				}
+			},
+			select: {
+				contract: true,
+				symbol: true
+			},
+		})
+
+		if (!asset) {
+      return { data: null, error: ['Asset not found'], status: HttpStatus.NOT_FOUND };
+    }
+
+		const balance = await this.eth.getBalance(account.data.address, asset.contract);
+		balance.balance = balance.balance / 10e+18;
+
+		const response = {
+			name: account.data.name,
+			symbol: asset.symbol,
+			amount: balance.balance
+		}
+
+    return { data: response, error: null, status: HttpStatus.OK };
   }
 
 }
