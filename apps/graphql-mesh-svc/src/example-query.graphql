@@ -1,7 +1,0 @@
-query ExampleAccountsQuery {
-  accounts {
-    name
-    address
-    status
-  }
-}

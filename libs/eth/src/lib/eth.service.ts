@@ -98,14 +98,14 @@ export class EthService {
 			};
 		}
 
-		public async transfer(fromAddress: string, toAddress: string, tokenAddress: string, amount: number): Promise<string> {
+		public async transfer(fromAddress: string, toAddress: string, tokenAddress: string, amount: number): Promise<{ hash: string, status: boolean }> {
 			const ledgerCoin = new this.web3.eth.Contract(abi, tokenAddress, { from: fromAddress });
 			const secret = await this.kv2.read(fromAddress);
 
 			const privateKey = secret.data.data.privateKey;
 			const value  = this.web3.utils.toHex(this.web3.utils.toWei(String(amount)));
 
-			const data = ledgerCoin.methods.tranfer(toAddress, value).encodeABI();
+			const data = ledgerCoin.methods.transfer(toAddress, value).encodeABI();
 
 			const txObj = {
 				"gas": this.web3.utils.toHex(100000),
@@ -115,7 +115,7 @@ export class EthService {
 				"from": fromAddress
 			};
 
-			const res = await this.web3.eth.accounts.signTransaction(txObj, privateKey, (err, signedTx) => {
+			const tx = await this.web3.eth.accounts.signTransaction(txObj, privateKey, (err, signedTx) => {
 				if (err) {
 					console.log(err);
 					throw new Error(err.message);
@@ -132,7 +132,15 @@ export class EthService {
 				}
 			});
 
-			return res.transactionHash;
+			// const receipt = await this.web3.eth.getTransactionReceipt(tx.transactionHash);
+
+			return { hash: tx.transactionHash, status: false };
+		}
+
+		public async getTransactionReceipt(hash: string) {
+
+			return this.web3.eth.getTransactionReceipt(hash);
+
 		}
 
 		public async mint(adminAddress: string, toAddress: string, tokenAddress: string, amount: number): Promise<string> {

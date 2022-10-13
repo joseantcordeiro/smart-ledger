@@ -1,11 +1,16 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 import { CreateBatchRequestDto } from './transactions.dto';
 import { CreateBatchResponse } from './transactions.pb';
 
 @Injectable()
 export class TransactionsService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		@InjectQueue('transactions') private transactionsQueue: Queue,
+	) {}
 
 	public async createBatch({ ledgerId, postings }: CreateBatchRequestDto): Promise<CreateBatchResponse> {
 
@@ -37,9 +42,12 @@ export class TransactionsService {
 			});
 
 			counter++;
+		
+			const job = await this.transactionsQueue.add('posting', posting);
 	 
 			// printing element
 			console.log("key : ", i, "counter : ", counter, "value : ", JSON.stringify(posting));
+			console.log("Job: ", JSON.stringify(job));
 		};
 
 		const updateBatch = await this.prisma.batches.update({

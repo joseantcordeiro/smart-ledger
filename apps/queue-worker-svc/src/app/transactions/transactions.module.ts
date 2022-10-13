@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { PrismaService } from '@ledger/prisma';
-import { TransactionsController } from './transactions.controller';
-import { TransactionsService } from './transactions.service';
+import { TransactionsProcessor } from './transactions.processor';
 import { EthService } from '@ledger/eth';
 
 @Module({
@@ -11,7 +10,7 @@ import { EthService } from '@ledger/eth';
       name: 'transactions',
     }),
   ],
-  controllers: [TransactionsController],
-  providers: [PrismaService, EthService, TransactionsService],
+  controllers: [],
+  providers: [PrismaService, EthService, TransactionsProcessor],
 })
 export class TransactionsModule {}

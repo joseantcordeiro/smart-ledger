@@ -5,7 +5,6 @@
     "docs": "apps/docs",
     "erc20": "libs/erc20",
     "eth": "libs/eth",
-    "graphql-mesh-svc": "apps/graphql-mesh-svc",
     "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
     "grpc-common-svc": "apps/grpc-common-svc",
@@ -13,6 +12,7 @@
     "grpc-tenants-svc": "apps/grpc-tenants-svc",
     "grpc-transactions-svc": "apps/grpc-transactions-svc",
     "prisma": "libs/prisma",
+    "queue-worker-svc": "apps/queue-worker-svc",
     "tracing": "libs/tracing",
     "vault": "libs/vault"
   }
