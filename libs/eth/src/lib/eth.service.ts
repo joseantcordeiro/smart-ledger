@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Web3Service } from "nest-web3";
 import { KV2VaultClient, Vault } from '@ledger/vault';
-import fs = require('fs');
-import solc = require('solc');
 import { abi, bytecode } from './constants';
 
 const vault = new Vault({
@@ -17,7 +15,7 @@ export class EthService {
 
 		private web3 = this.web3Service.getClient('eth');
 		private kv2: KV2VaultClient = vault.KV(2);
-
+		/**
 		private async compileAsset() {
 			const source = fs.readFileSync('LedgerCoin.sol', 'utf8');
 
@@ -42,7 +40,7 @@ export class EthService {
 			const contractFile = tempFile.contracts['LedgerCoin.sol']['Incrementer'];
 
 			return contractFile;
-		}
+		} */
 
 		public async deployAsset(address: string, name: string, symbol: string): Promise<string> {
 			const secret = await this.kv2.read(address);
@@ -115,6 +113,7 @@ export class EthService {
 				"from": fromAddress
 			};
 
+			/**
 			const tx = await this.web3.eth.accounts.signTransaction(txObj, privateKey, (err, signedTx) => {
 				if (err) {
 					console.log(err);
@@ -130,11 +129,14 @@ export class EthService {
 						}
 					})
 				}
-			});
+			}); */
+
+			const signedTx = await this.web3.eth.accounts.signTransaction(txObj, privateKey);
+			const receipt = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
 			// const receipt = await this.web3.eth.getTransactionReceipt(tx.transactionHash);
 
-			return { hash: tx.transactionHash, status: false };
+			return { hash: receipt.transactionHash, status: receipt.status };
 		}
 
 		public async getTransactionReceipt(hash: string) {

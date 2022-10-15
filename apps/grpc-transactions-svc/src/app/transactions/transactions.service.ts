@@ -43,11 +43,11 @@ export class TransactionsService {
 
 			counter++;
 		
-			const job = await this.transactionsQueue.add('posting', posting);
+			// const job = await this.transactionsQueue.add('posting', posting);
 	 
 			// printing element
 			console.log("key : ", i, "counter : ", counter, "value : ", JSON.stringify(posting));
-			console.log("Job: ", JSON.stringify(job));
+			
 		};
 
 		const updateBatch = await this.prisma.batches.update({
@@ -60,9 +60,13 @@ export class TransactionsService {
 			select: {
 				id: true,
         status: true,
-				counter: true
+				counter: true,
+				ledgerId: true
 			}
 		})
+
+		const job = await this.transactionsQueue.add('batch', updateBatch);
+		console.log("Job: ", JSON.stringify(job));
 
     return { data: updateBatch, error: null, status: HttpStatus.CREATED };
 	}
