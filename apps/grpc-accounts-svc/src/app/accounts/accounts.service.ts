@@ -114,7 +114,7 @@ export class AccountsService {
     }
 
 		const balance = await this.eth.getBalance(account.data.address, asset.contract);
-		balance.balance = Math.trunc(balance.balance / 10e+16);
+		balance.balance = Math.trunc(balance.balance / 10e+18);
 
 		const response = {
 			name: account.data.name,

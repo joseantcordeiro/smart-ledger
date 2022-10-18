@@ -25,6 +25,7 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.13",
     "@docusaurus/preset-classic": "2.0.0-beta.13",
+    "@fluent-org/logger": "^1.0.10",
     "@grpc/grpc-js": "^1.7.1",
     "@grpc/proto-loader": "^0.7.3",
     "@mdx-js/react": "^1.6.21",

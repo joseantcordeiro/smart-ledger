@@ -58,7 +58,7 @@ export class TransactionsProcessor {
 			const tokenAddress = asset.contract;
 			this.logger.debug(tokenAddress);
 
-			const tx = await this.eth.transfer(fromAddress, toAddress, tokenAddress, postings[i].value);
+			const tx = await this.eth.transaction(fromAddress, toAddress, tokenAddress, postings[i].value, postings[i].type);
 			this.logger.debug(tx);
 
 			const transaction = await this.prisma.transactions.create({
@@ -70,7 +70,7 @@ export class TransactionsProcessor {
 			});
 			this.logger.debug(transaction);
 
-			const _posting = await this.prisma.postings.update({
+			await this.prisma.postings.update({
 				where: {
 					id: postings[i].id
 				},
@@ -94,77 +94,6 @@ export class TransactionsProcessor {
 		});
 		this.logger.debug('Batch completed');
   }
-
-  @Process('posting')
-  async handlePosting(job: Job) {
-    this.logger.debug('Start transaction...');
-		const fromAddress = await this.accountAddress(job.data.source, job.data.ledgerId);
-		this.logger.debug(fromAddress);
-		const toAddress = await this.accountAddress(job.data.destination, job.data.ledgerId);
-		this.logger.debug(toAddress);
-
-		const asset = await this.prisma.assets.findUnique({
-			where: {
-        ledgerId_symbol: {
-					ledgerId: job.data.ledgerId,
-					symbol: job.data.asset
-				}
-			},
-			select: {
-        contract: true
-      }
-		})
-		const tokenAddress = asset.contract;
-		this.logger.debug(tokenAddress);
-
-		const tx = await this.eth.transfer(fromAddress, toAddress, tokenAddress, job.data.value);
-		this.logger.debug(tx);
-
-		const transaction = await this.prisma.transactions.create({
-			data: {
-        hash: tx.hash,
-				status: tx.status,
-				ledgerId: job.data.ledgerId,
-			}
-		});
-		this.logger.debug(transaction);
-
-		const posting = await this.prisma.postings.update({
-			where: {
-        id: job.data.id
-			},
-			data: {
-        txId: transaction.id
-      }
-		});
-
-		// await this.transactionsQueue.add('transaction', transaction);
-
-    this.logger.debug('Transaction completed');
-  }
-
-	@Process('transaction')
-	async handleTransaction(job: Job) {
-
-		this.logger.debug("Attempting to get transaction receipt...");
-		let receipt = null;
-		do {
-			setTimeout(async () => {
-				receipt = await this.eth.getTransactionReceipt(job.data.hash);
-			}, 1000);
-			this.logger.debug(receipt);
-		} while ( receipt === null)
-
-		await this.prisma.transactions.update({
-			where: {
-        id: job.data.id
-			},
-			data: {
-        status: receipt.status
-      }
-		});
-
-	}
 
 	public async accountAddress(name: string, ledgerId: string): Promise<string> {
 		

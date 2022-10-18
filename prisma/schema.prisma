@@ -22,6 +22,12 @@ enum batchStatus {
 	PROCESSING
 }
 
+enum postingType {
+	TRANSFER
+	DEPOSIT
+	WITHDRAWAL
+}
+
 model tenants {
 	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String 	 @db.VarChar(50)
@@ -132,15 +138,16 @@ model batches {
 }
 
 model postings {
-	id					String  	@id @default(cuid()) @db.VarChar(50)
-	source 			String  	@db.VarChar(50)
-	destination String  	@db.VarChar(50)
-	asset 	 		String  	@db.VarChar(4)
-	value 			Int		  	
-	batchId 		String  	@db.VarChar(50)
-	txId 				String? 	@db.VarChar(50)
-	ledgerId  	String  	@db.VarChar(50)
-	timestamp 	DateTime 	@default(now())
+	id					String  		@id @default(cuid()) @db.VarChar(50)
+	source 			String  		@db.VarChar(50)
+	destination String  		@db.VarChar(50)
+	asset 	 		String  		@db.VarChar(4)
+	value 			Int
+	type	 			String		  @default("TRANSFER") @db.VarChar(10)
+	batchId 		String  		@db.VarChar(50)
+	txId 				String? 		@db.VarChar(50)
+	ledgerId  	String  		@db.VarChar(50)
+	timestamp 	DateTime 		@default(now())
 }
 
 model transactions {
@@ -149,24 +156,4 @@ model transactions {
 	status	  Boolean  	@default(false) @db.Boolean
 	ledgerId  String   	@db.VarChar(50)
 	timestamp DateTime 	@default(now())
-}
-
-model deposits {
-	id					String  	@id @default(cuid()) @db.VarChar(50)
-	destination String  	@db.VarChar(50)
-	asset 	 		String  	@db.VarChar(4)
-	value 			Int		  	
-	txId 				String? 	@db.VarChar(50)
-	ledgerId  	String  	@db.VarChar(50)
-	timestamp 	DateTime 	@default(now())
-}
-
-model withdrawals {
-	id					String  	@id @default(cuid()) @db.VarChar(50)
-	source			String  	@db.VarChar(50)
-	asset 	 		String  	@db.VarChar(4)
-	value 			Int		  	
-	txId 				String? 	@db.VarChar(50)
-	ledgerId  	String  	@db.VarChar(50)
-	timestamp 	DateTime 	@default(now())
 }

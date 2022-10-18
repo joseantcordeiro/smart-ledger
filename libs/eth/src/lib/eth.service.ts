@@ -96,14 +96,32 @@ export class EthService {
 			};
 		}
 
-		public async transfer(fromAddress: string, toAddress: string, tokenAddress: string, amount: number): Promise<{ hash: string, status: boolean }> {
+		public async transaction(
+				fromAddress: string,
+				toAddress: string,
+				tokenAddress: string,
+				amount: number,
+				type: string
+			): Promise<{ hash: string, status: boolean }> {
 			const ledgerCoin = new this.web3.eth.Contract(abi, tokenAddress, { from: fromAddress });
 			const secret = await this.kv2.read(fromAddress);
 
 			const privateKey = secret.data.data.privateKey;
 			const value  = this.web3.utils.toHex(this.web3.utils.toWei(String(amount)));
 
-			const data = ledgerCoin.methods.transfer(toAddress, value).encodeABI();
+			// const data = ledgerCoin.methods.transfer(toAddress, value).encodeABI();
+			let data = "";
+			
+			switch (type) {
+				case 'TRANSFER': data = ledgerCoin.methods.transfer(toAddress, value).encodeABI();
+						break;
+				case 'DEPOSIT': data = ledgerCoin.methods.mint(toAddress, value).encodeABI();
+						break;
+				case 'WITHDRAWAL': data = ledgerCoin.methods.burnFrom(toAddress, value).encodeABI();
+						break;
+				default:
+							//default block statement;
+			}
 
 			const txObj = {
 				"gas": this.web3.utils.toHex(100000),

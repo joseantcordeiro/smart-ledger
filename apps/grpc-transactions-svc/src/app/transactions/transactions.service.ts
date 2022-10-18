@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "@ledger/prisma";
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
-import { CreateBatchRequestDto } from './transactions.dto';
+import { CreateBatchRequestDto, CreateDepositRequestDto, CreateWithdrawalRequestDto } from './transactions.dto';
 import { CreateBatchResponse } from './transactions.pb';
 
 @Injectable()
@@ -11,6 +11,34 @@ export class TransactionsService {
 		private prisma: PrismaService,
 		@InjectQueue('transactions') private transactionsQueue: Queue,
 	) {}
+
+	public async createDeposit({ ledgerId, destination, asset, value }: CreateDepositRequestDto): Promise<CreateBatchResponse> {
+
+		const postings = [{
+			source: 'ledger:admin',
+			destination: destination,
+			asset: asset,
+			value: value,
+			type: 'DEPOSIT',
+		}];
+
+		return this.createBatch({ ledgerId, postings });
+		
+	}
+
+	public async createWithdrawal({ ledgerId, source, asset, value }: CreateWithdrawalRequestDto): Promise<CreateBatchResponse> {
+
+		const postings = [{
+			source: 'ledger:admin',
+			destination: source,
+			asset: asset,
+			value: value,
+			type: 'WITHDRAWAL',
+		}];
+
+		return this.createBatch({ ledgerId, postings });
+		
+	}
 
 	public async createBatch({ ledgerId, postings }: CreateBatchRequestDto): Promise<CreateBatchResponse> {
 
@@ -36,6 +64,7 @@ export class TransactionsService {
 					destination: postings[i].destination,
 					asset: postings[i].asset,
 					value: postings[i].value,
+					type: postings[i].type,
 					batchId: batch.id,
 					ledgerId: batch.ledgerId
 				}

@@ -29,4 +29,26 @@ export class TransactionsController implements OnModuleInit {
 		return this.svc.createBatch({ ledgerId, postings });
   }
 
+	@Post(':ledgerId/deposit')
+  private async createDeposit(
+		@Param('ledgerId') ledgerId: string,
+    @Body() BodyInput: { destination: string, asset: string, value: number },
+  ): Promise<Observable<CreateBatchResponse>> {
+		const destination = BodyInput.destination;
+		const asset = BodyInput.asset;
+		const value = BodyInput.value;
+		return this.svc.createDeposit({ ledgerId, destination, asset, value });
+  }
+
+	@Post(':ledgerId/withdrawal')
+  private async createWithdrawal(
+		@Param('ledgerId') ledgerId: string,
+    @Body() BodyInput: { source: string, asset: string, value: number },
+  ): Promise<Observable<CreateBatchResponse>> {
+		const source = BodyInput.source;
+		const asset = BodyInput.asset;
+		const value = BodyInput.value;
+		return this.svc.createWithdrawal({ ledgerId, source, asset, value });
+  }
+
 }

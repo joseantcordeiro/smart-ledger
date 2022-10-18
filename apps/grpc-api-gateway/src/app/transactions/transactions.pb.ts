@@ -50,6 +50,20 @@ export interface UpdateBatchStatusResponse {
   data: Batch | undefined;
 }
 
+export interface CreateDepositRequest {
+  ledgerId: string;
+  destination: string;
+  asset: string;
+  value: number;
+}
+
+export interface CreateWithdrawalRequest {
+  ledgerId: string;
+  source: string;
+  asset: string;
+  value: number;
+}
+
 export const TRANSACTIONS_PACKAGE_NAME = "transactions";
 
 export interface TransactionsServiceClient {
@@ -58,6 +72,10 @@ export interface TransactionsServiceClient {
   createPosting(request: CreatePostingRequest): Observable<CreatePostingResponse>;
 
   updateBatchStatus(request: UpdateBatchStatusRequest): Observable<UpdateBatchStatusResponse>;
+
+  createDeposit(request: CreateDepositRequest): Observable<CreateBatchResponse>;
+
+  createWithdrawal(request: CreateWithdrawalRequest): Observable<CreateBatchResponse>;
 }
 
 export interface TransactionsServiceController {
@@ -72,11 +90,25 @@ export interface TransactionsServiceController {
   updateBatchStatus(
     request: UpdateBatchStatusRequest,
   ): Promise<UpdateBatchStatusResponse> | Observable<UpdateBatchStatusResponse> | UpdateBatchStatusResponse;
+
+  createDeposit(
+    request: CreateDepositRequest,
+  ): Promise<CreateBatchResponse> | Observable<CreateBatchResponse> | CreateBatchResponse;
+
+  createWithdrawal(
+    request: CreateWithdrawalRequest,
+  ): Promise<CreateBatchResponse> | Observable<CreateBatchResponse> | CreateBatchResponse;
 }
 
 export function TransactionsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createBatch", "createPosting", "updateBatchStatus"];
+    const grpcMethods: string[] = [
+      "createBatch",
+      "createPosting",
+      "updateBatchStatus",
+      "createDeposit",
+      "createWithdrawal",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("TransactionsService", method)(constructor.prototype[method], method, descriptor);
