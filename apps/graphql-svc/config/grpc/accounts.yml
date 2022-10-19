@@ -1,0 +1,8 @@
+handler:
+  grpc:
+    endpoint: localhost:50053
+    protoFilePath:
+      file: ./proto/accounts/accounts.proto
+      load:
+        includeDirs:
+          - ./proto/accounts

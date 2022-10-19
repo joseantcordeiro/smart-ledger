@@ -2,9 +2,11 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "auth": "libs/auth",
     "docs": "apps/docs",
     "erc20": "libs/erc20",
     "eth": "libs/eth",
+    "graphql-svc": "apps/graphql-svc",
     "grpc-accounts-svc": "apps/grpc-accounts-svc",
     "grpc-api-gateway": "apps/grpc-api-gateway",
     "grpc-common-svc": "apps/grpc-common-svc",

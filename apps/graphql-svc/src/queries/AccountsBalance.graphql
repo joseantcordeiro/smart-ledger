@@ -1,0 +1,11 @@
+mutation AccountsBalance {
+  accounts_AccountsService_Balance(input: { name: "ledger:admin", symbol: "L2C", ledger_id: "cl8zjy0i20000tmfmtnbe6vr5" } ) {
+    status,
+    error,
+		data {
+      name
+      symbol
+      amount
+    }
+  }
+}

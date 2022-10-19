@@ -1,4 +1,7 @@
-import { Body, Controller, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, UseGuards, Session } from '@nestjs/common';
+import { SessionContainer, SessionClaimValidator } from "supertokens-node/recipe/session";
+import UserRoles from "supertokens-node/recipe/userroles";
+import { AuthGuard } from '@ledger/auth';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
@@ -25,7 +28,15 @@ export class TenantsController implements OnModuleInit {
   }
 
 	@Post()
+	@UseGuards(new AuthGuard({
+		overrideGlobalClaimValidators: async (globalValidators: SessionClaimValidator[]) => ([
+			...globalValidators,
+			UserRoles.UserRoleClaim.validators.includes("admin"),
+			// UserRoles.PermissionClaim.validators.includes("edit")
+		])
+	}))
   private async createTenant(
+		@Session() session: SessionContainer,
     @Body() createTenant: { name: string, identifier: string, country: string, timezone: number},
   ): Promise<Observable<CreateTenantResponse>> {
 		const name = createTenant.name;

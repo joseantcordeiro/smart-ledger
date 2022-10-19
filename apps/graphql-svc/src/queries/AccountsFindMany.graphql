@@ -1,0 +1,11 @@
+mutation AccountsFindMany {
+  accounts_AccountsService_FindMany(input: { ledger_id: "cl8zjy0i20000tmfmtnbe6vr5" } ) {
+    status,
+    error,
+    data {
+      name
+      address
+      status
+    }
+  }
+}

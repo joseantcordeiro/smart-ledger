@@ -1,0 +1,45 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/graphql-svc/src",
+  "targets": {
+    "build": {
+      "executor": "@diogovcs/graphql-mesh:build",
+      "options": {
+        "meshYmlPath": "apps/graphql-svc/config",
+        "singleMeshFile": false,
+        "outputPath": "dist/apps/graphql-svc",
+        "rootPath": "apps/graphql-svc",
+        "tsconfigPath": "apps/graphql-svc/tsconfig.lib.json",
+        "typescriptSupport": true
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ],
+      "outputs": ["coverage/apps/graphql-svc"],
+      "options": {
+        "jestConfig": "apps/graphql-svc/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "serve": {
+      "executor": "@diogovcs/graphql-mesh:serve",
+      "options": {
+        "meshYmlPath": "apps/graphql-svc/config"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/graphql-svc/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -28,6 +28,19 @@ enum postingType {
 	WITHDRAWAL
 }
 
+model CasbinRule {
+  id    Int     @id @default(autoincrement())
+  ptype String
+  v0    String?
+  v1    String?
+  v2    String?
+  v3    String?
+  v4    String?
+  v5    String?
+
+  @@map("casbin_rule")
+}
+
 model tenants {
 	id 				 	 String 	 @id @default(cuid()) @db.VarChar(50)
 	identifier 	 String 	 @db.VarChar(50)
@@ -85,11 +98,12 @@ model countries {
 }
 
 model accounts {
-  address   String  @unique @db.VarChar
-	name 		  String  @db.VarChar(50)
-	status    Status  @default(ACTIVE)
-	ledgerId  String  @db.VarChar(50)
-	ledger	  ledgers @relation(fields: [ledgerId], references: [id])
+	id				String   @id @default(cuid()) @db.VarChar(50)
+  address   String   @unique @db.VarChar
+	name 		  String   @db.VarChar(50)
+	status    Status   @default(ACTIVE)
+	ledgerId  String   @db.VarChar(50)
+	ledger	  ledgers  @relation(fields: [ledgerId], references: [id])
 	timestamp DateTime @default(now())
 
 	@@unique([name, ledgerId])

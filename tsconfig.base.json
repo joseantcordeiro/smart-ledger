@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@ledger/auth": ["libs/auth/src/index.ts"],
       "@ledger/erc20": ["libs/erc20/src/index.ts"],
       "@ledger/eth": ["libs/eth/src/index.ts"],
       "@ledger/prisma": ["libs/prisma/src/index.ts"],

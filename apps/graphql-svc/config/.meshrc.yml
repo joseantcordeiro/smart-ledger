@@ -1,0 +1,16 @@
+sources:
+  - name: AccountsService
+    handler:
+      grpc:
+        endpoint: localhost:50053
+        protoFilePath:
+          file: ./grpc/proto/accounts/accounts.proto
+          load:
+            includeDirs:
+              - ./grpc/proto/accounts
+
+documents:
+  - ../src/queries/*.graphql
+
+serve:
+  playground: true
