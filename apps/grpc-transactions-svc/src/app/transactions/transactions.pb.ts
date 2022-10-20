@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -9,6 +10,7 @@ export interface Posting {
   destination: string;
   asset: string;
   value: number;
+  type: string;
 }
 
 export interface Batch {
@@ -67,36 +69,41 @@ export interface CreateWithdrawalRequest {
 export const TRANSACTIONS_PACKAGE_NAME = "transactions";
 
 export interface TransactionsServiceClient {
-  createBatch(request: CreateBatchRequest): Observable<CreateBatchResponse>;
+  createBatch(request: CreateBatchRequest, metadata?: Metadata): Observable<CreateBatchResponse>;
 
-  createPosting(request: CreatePostingRequest): Observable<CreatePostingResponse>;
+  createPosting(request: CreatePostingRequest, metadata?: Metadata): Observable<CreatePostingResponse>;
 
-  updateBatchStatus(request: UpdateBatchStatusRequest): Observable<UpdateBatchStatusResponse>;
+  updateBatchStatus(request: UpdateBatchStatusRequest, metadata?: Metadata): Observable<UpdateBatchStatusResponse>;
 
-  createDeposit(request: CreateDepositRequest): Observable<CreateBatchResponse>;
+  createDeposit(request: CreateDepositRequest, metadata?: Metadata): Observable<CreateBatchResponse>;
 
-  createWithdrawal(request: CreateWithdrawalRequest): Observable<CreateBatchResponse>;
+  createWithdrawal(request: CreateWithdrawalRequest, metadata?: Metadata): Observable<CreateBatchResponse>;
 }
 
 export interface TransactionsServiceController {
   createBatch(
     request: CreateBatchRequest,
+    metadata?: Metadata,
   ): Promise<CreateBatchResponse> | Observable<CreateBatchResponse> | CreateBatchResponse;
 
   createPosting(
     request: CreatePostingRequest,
+    metadata?: Metadata,
   ): Promise<CreatePostingResponse> | Observable<CreatePostingResponse> | CreatePostingResponse;
 
   updateBatchStatus(
     request: UpdateBatchStatusRequest,
+    metadata?: Metadata,
   ): Promise<UpdateBatchStatusResponse> | Observable<UpdateBatchStatusResponse> | UpdateBatchStatusResponse;
 
   createDeposit(
     request: CreateDepositRequest,
+    metadata?: Metadata,
   ): Promise<CreateBatchResponse> | Observable<CreateBatchResponse> | CreateBatchResponse;
 
   createWithdrawal(
     request: CreateWithdrawalRequest,
+    metadata?: Metadata,
   ): Promise<CreateBatchResponse> | Observable<CreateBatchResponse> | CreateBatchResponse;
 }
 

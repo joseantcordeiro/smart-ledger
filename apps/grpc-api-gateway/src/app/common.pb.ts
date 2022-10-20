@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata as Metadata1 } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -98,54 +99,68 @@ export interface CreateMetadataResponse {
 export const COMMON_PACKAGE_NAME = "common";
 
 export interface CommonServiceClient {
-  tenantDefaultConfiguration(request: DefaultConfigurationRequest): Observable<DefaultConfigurationResponse>;
+  tenantDefaultConfiguration(
+    request: DefaultConfigurationRequest,
+    metadata?: Metadata1,
+  ): Observable<DefaultConfigurationResponse>;
 
-  metadataDefaultConfiguration(request: DefaultMetadataRequest): Observable<DefaultMetadataResponse>;
+  metadataDefaultConfiguration(
+    request: DefaultMetadataRequest,
+    metadata?: Metadata1,
+  ): Observable<DefaultMetadataResponse>;
 
-  findOneConfiguration(request: FindOneRequest): Observable<FindConfigurationResponse>;
+  findOneConfiguration(request: FindOneRequest, metadata?: Metadata1): Observable<FindConfigurationResponse>;
 
-  findManyConfiguration(request: FindManyRequest): Observable<FindConfigurationsResponse>;
+  findManyConfiguration(request: FindManyRequest, metadata?: Metadata1): Observable<FindConfigurationsResponse>;
 
-  findOneMetadata(request: FindOneRequest): Observable<FindMetadataResponse>;
+  findOneMetadata(request: FindOneRequest, metadata?: Metadata1): Observable<FindMetadataResponse>;
 
-  findManyMetadata(request: FindManyRequest): Observable<FindMetadatasResponse>;
+  findManyMetadata(request: FindManyRequest, metadata?: Metadata1): Observable<FindMetadatasResponse>;
 
-  createConfiguration(request: CreateRequest): Observable<CreateConfigurationResponse>;
+  createConfiguration(request: CreateRequest, metadata?: Metadata1): Observable<CreateConfigurationResponse>;
 
-  createMetadata(request: CreateRequest): Observable<CreateMetadataResponse>;
+  createMetadata(request: CreateRequest, metadata?: Metadata1): Observable<CreateMetadataResponse>;
 }
 
 export interface CommonServiceController {
   tenantDefaultConfiguration(
     request: DefaultConfigurationRequest,
+    metadata?: Metadata1,
   ): Promise<DefaultConfigurationResponse> | Observable<DefaultConfigurationResponse> | DefaultConfigurationResponse;
 
   metadataDefaultConfiguration(
     request: DefaultMetadataRequest,
+    metadata?: Metadata1,
   ): Promise<DefaultMetadataResponse> | Observable<DefaultMetadataResponse> | DefaultMetadataResponse;
 
   findOneConfiguration(
     request: FindOneRequest,
+    metadata?: Metadata1,
   ): Promise<FindConfigurationResponse> | Observable<FindConfigurationResponse> | FindConfigurationResponse;
 
   findManyConfiguration(
     request: FindManyRequest,
+    metadata?: Metadata1,
   ): Promise<FindConfigurationsResponse> | Observable<FindConfigurationsResponse> | FindConfigurationsResponse;
 
   findOneMetadata(
     request: FindOneRequest,
+    metadata?: Metadata1,
   ): Promise<FindMetadataResponse> | Observable<FindMetadataResponse> | FindMetadataResponse;
 
   findManyMetadata(
     request: FindManyRequest,
+    metadata?: Metadata1,
   ): Promise<FindMetadatasResponse> | Observable<FindMetadatasResponse> | FindMetadatasResponse;
 
   createConfiguration(
     request: CreateRequest,
+    metadata?: Metadata1,
   ): Promise<CreateConfigurationResponse> | Observable<CreateConfigurationResponse> | CreateConfigurationResponse;
 
   createMetadata(
     request: CreateRequest,
+    metadata?: Metadata1,
   ): Promise<CreateMetadataResponse> | Observable<CreateMetadataResponse> | CreateMetadataResponse;
 }
 

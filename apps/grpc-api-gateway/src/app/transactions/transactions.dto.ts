@@ -16,4 +16,7 @@ export class CreateBatchBodyDto {
 	@IsNumber()
 	public readonly value: number;
 
+	@IsString()
+  public readonly type: string = "TRANSFER";
+
 }

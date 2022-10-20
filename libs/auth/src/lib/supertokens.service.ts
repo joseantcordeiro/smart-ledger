@@ -3,6 +3,7 @@ import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import UserRoles from "supertokens-node/recipe/userroles";
+import UserMetadata from "supertokens-node/recipe/usermetadata";
 import { ConfigInjectionToken, AuthModuleConfig } from './config/config.interface';
 
 @Injectable()
@@ -48,6 +49,7 @@ export class SupertokensService {
 					
 				}),
 				UserRoles.init(),
+				UserMetadata.init(),
         Session.init({
           jwt: {
             enable: true,

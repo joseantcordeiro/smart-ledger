@@ -11,9 +11,15 @@ import { SupertokensService } from './supertokens.service';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtConfigService } from './config/jwt.service';
 
 @Module({
-	imports: [],
+	imports: [
+		JwtModule.registerAsync({
+			useClass: JwtConfigService
+		}),
+	],
   providers: [SupertokensService, AuthService],
   exports: [],
   controllers: [AuthController],

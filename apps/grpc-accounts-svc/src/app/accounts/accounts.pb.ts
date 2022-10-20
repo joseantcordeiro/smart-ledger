@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -56,30 +57,34 @@ export interface FindBalanceResponse {
 export const ACCOUNTS_PACKAGE_NAME = "accounts";
 
 export interface AccountsServiceClient {
-  findOne(request: FindAccountRequest): Observable<FindAccountResponse>;
+  findOne(request: FindAccountRequest, metadata?: Metadata): Observable<FindAccountResponse>;
 
-  findMany(request: FindAccountsRequest): Observable<FindAccountsResponse>;
+  findMany(request: FindAccountsRequest, metadata?: Metadata): Observable<FindAccountsResponse>;
 
-  createAccount(request: FindAccountRequest): Observable<FindAccountResponse>;
+  createAccount(request: FindAccountRequest, metadata?: Metadata): Observable<FindAccountResponse>;
 
-  balance(request: FindBalanceRequest): Observable<FindBalanceResponse>;
+  balance(request: FindBalanceRequest, metadata?: Metadata): Observable<FindBalanceResponse>;
 }
 
 export interface AccountsServiceController {
   findOne(
     request: FindAccountRequest,
+    metadata?: Metadata,
   ): Promise<FindAccountResponse> | Observable<FindAccountResponse> | FindAccountResponse;
 
   findMany(
     request: FindAccountsRequest,
+    metadata?: Metadata,
   ): Promise<FindAccountsResponse> | Observable<FindAccountsResponse> | FindAccountsResponse;
 
   createAccount(
     request: FindAccountRequest,
+    metadata?: Metadata,
   ): Promise<FindAccountResponse> | Observable<FindAccountResponse> | FindAccountResponse;
 
   balance(
     request: FindBalanceRequest,
+    metadata?: Metadata,
   ): Promise<FindBalanceResponse> | Observable<FindBalanceResponse> | FindBalanceResponse;
 }
 

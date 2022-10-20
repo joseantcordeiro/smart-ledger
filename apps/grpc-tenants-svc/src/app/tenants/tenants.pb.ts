@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -48,18 +49,20 @@ export interface CreateTenantResponse {
 export const TENANTS_PACKAGE_NAME = "tenants";
 
 export interface TenantsServiceClient {
-  findOne(request: FindTenantRequest): Observable<FindTenantResponse>;
+  findOne(request: FindTenantRequest, metadata?: Metadata): Observable<FindTenantResponse>;
 
-  createTenant(request: CreateTenantRequest): Observable<CreateTenantResponse>;
+  createTenant(request: CreateTenantRequest, metadata?: Metadata): Observable<CreateTenantResponse>;
 }
 
 export interface TenantsServiceController {
   findOne(
     request: FindTenantRequest,
+    metadata?: Metadata,
   ): Promise<FindTenantResponse> | Observable<FindTenantResponse> | FindTenantResponse;
 
   createTenant(
     request: CreateTenantRequest,
+    metadata?: Metadata,
   ): Promise<CreateTenantResponse> | Observable<CreateTenantResponse> | CreateTenantResponse;
 }
 

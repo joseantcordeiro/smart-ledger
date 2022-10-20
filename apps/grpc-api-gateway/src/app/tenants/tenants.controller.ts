@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Inject, OnModuleInit, Param, Post, UseGuards, Session } from '@nestjs/common';
+import { Metadata } from '@grpc/grpc-js';
 import { SessionContainer, SessionClaimValidator } from "supertokens-node/recipe/session";
 import UserRoles from "supertokens-node/recipe/userroles";
 import { AuthGuard } from '@ledger/auth';
@@ -23,8 +24,15 @@ export class TenantsController implements OnModuleInit {
   }
 
   @Get(':id')
-  private async findOne(@Param('id') id: string): Promise<Observable<FindTenantResponse>> {
-    return this.svc.findOne({ id });
+	@UseGuards(new AuthGuard())
+  private async findOne(
+			@Session() session: SessionContainer,
+			@Param('id') id: string
+		): Promise<Observable<FindTenantResponse>> {
+		const token = session.getAccessTokenPayload()["jwt"];
+		const metadata = new Metadata();
+  	metadata.add('Authorization', `Bearer ${token}`);
+    return this.svc.findOne({ id }, metadata);
   }
 
 	@Post()
@@ -39,11 +47,14 @@ export class TenantsController implements OnModuleInit {
 		@Session() session: SessionContainer,
     @Body() createTenant: { name: string, identifier: string, country: string, timezone: number},
   ): Promise<Observable<CreateTenantResponse>> {
+		const token = session.getAccessTokenPayload()["jwt"];
+		const metadata = new Metadata();
+  	metadata.add('Authorization', `Bearer ${token}`);
 		const name = createTenant.name;
 		const identifier = createTenant.identifier;
 		const timezone = createTenant.timezone;
 		const country = createTenant.country;
-		return this.svc.createTenant({ name, identifier, country, timezone });
+		return this.svc.createTenant({ name, identifier, country, timezone }, metadata);
   }
 	
 }

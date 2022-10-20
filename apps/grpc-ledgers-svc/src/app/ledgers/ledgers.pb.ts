@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -53,24 +54,27 @@ export interface CreateAssetResponse {
 export const LEDGERS_PACKAGE_NAME = "ledgers";
 
 export interface LedgersServiceClient {
-  findOne(request: FindLedgerRequest): Observable<FindLedgerResponse>;
+  findOne(request: FindLedgerRequest, metadata?: Metadata): Observable<FindLedgerResponse>;
 
-  createLedger(request: CreateLedgerRequest): Observable<CreateLedgerResponse>;
+  createLedger(request: CreateLedgerRequest, metadata?: Metadata): Observable<CreateLedgerResponse>;
 
-  createAsset(request: CreateAssetRequest): Observable<CreateAssetResponse>;
+  createAsset(request: CreateAssetRequest, metadata?: Metadata): Observable<CreateAssetResponse>;
 }
 
 export interface LedgersServiceController {
   findOne(
     request: FindLedgerRequest,
+    metadata?: Metadata,
   ): Promise<FindLedgerResponse> | Observable<FindLedgerResponse> | FindLedgerResponse;
 
   createLedger(
     request: CreateLedgerRequest,
+    metadata?: Metadata,
   ): Promise<CreateLedgerResponse> | Observable<CreateLedgerResponse> | CreateLedgerResponse;
 
   createAsset(
     request: CreateAssetRequest,
+    metadata?: Metadata,
   ): Promise<CreateAssetResponse> | Observable<CreateAssetResponse> | CreateAssetResponse;
 }
 
