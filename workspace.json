@@ -3,7 +3,8 @@
   "version": 2,
   "projects": {
     "auth": "libs/auth",
-    "docs": "apps/docs",
+    "console": "apps/console",
+    "console-e2e": "apps/console-e2e",
     "erc20": "libs/erc20",
     "eth": "libs/eth",
     "graphql-svc": "apps/graphql-svc",

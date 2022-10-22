@@ -56,7 +56,8 @@ export class AuthModule implements NestModule {
 		const appInfo = {
 			appName: config.get<string>('AUTH_APP_NAME'),
 			apiDomain: config.get<string>('AUTH_API_DOMAIN'),
-			websiteDomain: config.get<string>('AUTH_WEBSITE_DOMAIN')
+			websiteDomain: config.get<string>('AUTH_WEBSITE_DOMAIN'),
+			apiBasePath: config.get<string>('AUTH_API_BASE_PATH'),
 		}
 		const connectionURI = config.get<string>('AUTH_URI');
 		const apiKey = config.get<string>('AUTH_API_KEY');
