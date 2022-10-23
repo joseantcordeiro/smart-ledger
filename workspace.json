@@ -17,6 +17,7 @@
     "prisma": "libs/prisma",
     "queue-worker-svc": "apps/queue-worker-svc",
     "tracing": "libs/tracing",
+    "utils": "libs/utils",
     "vault": "libs/vault"
   }
 }
